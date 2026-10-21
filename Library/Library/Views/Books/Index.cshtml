@@ -1,0 +1,31 @@
+﻿@Model IEnumerable
+<Library.Models.Book>
+    @{
+    ViewData["Title"] = "List with books";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add a new book</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Title</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BookID" class="btn btn-sm btn-warning">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookID" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+</Library.Models.Book>
