@@ -1,0 +1,22 @@
+﻿@model Library.Models.Book
+
+@{
+    ViewData["Title"] = "Delete Book";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-danger fw-bold">Delete Book</h2>
+    
+    <h4 class="mb-3">Are you sure you want to delete this book?</h4>
+    
+    <div class="mb-4">
+        <p><strong>Title:</strong> @Model.Title</p>
+        <p><strong>Price:</strong> @Model.Price.ToString("0.00")</p>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="BookId" />
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
