@@ -1,6 +1,6 @@
 ﻿namespace Library.Controllers;
 
-public class AccountController
+public class CustomersController
 {
     
 }

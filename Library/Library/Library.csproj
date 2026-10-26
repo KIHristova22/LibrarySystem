@@ -22,8 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\Admin\Views\Roles\" />
-      <Folder Include="Areas\Admin\Views\Users\" />
       <Folder Include="wwwroot\css\" />
       <Folder Include="wwwroot\js\" />
     </ItemGroup>
@@ -32,6 +30,10 @@
       <_ContentIncludedByDefault Remove="Cs\Delete.cshtml" />
       <_ContentIncludedByDefault Remove="Cs\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Cs\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\User\Views\Profile\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Account\AccessDenied.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Account\Login.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Shared\_Layout.cshtml" />
     </ItemGroup>
 
 </Project>
