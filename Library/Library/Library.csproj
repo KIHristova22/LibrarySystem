@@ -18,11 +18,14 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="9.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
       <PackageReference Include="Schema.NET" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Areas\Admin\Views\Roles\" />
       <Folder Include="Areas\Admin\Views\Users\" />
+      <Folder Include="wwwroot\css\" />
+      <Folder Include="wwwroot\js\" />
     </ItemGroup>
 
     <ItemGroup>

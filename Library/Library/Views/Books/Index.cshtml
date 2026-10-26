@@ -1,4 +1,4 @@
-﻿@Model IEnumerable
+﻿@model IEnumerable<Library.Models.Book>
 <Library.Models.Book>
     @{
     ViewData["Title"] = "List with books";
@@ -21,8 +21,8 @@
             <td>@Html.DisplayFor(modelItem => item.Title)</td>
             <td>@Html.DisplayFor(modelItem => item.Price)</td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.BookID" class="btn btn-sm btn-warning">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookID" class="btn btn-sm btn-danger">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.BookId" class="btn btn-sm btn-warning">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookId" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
     }

@@ -16,8 +16,8 @@ public class LibraryContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer(
-                "Server=.\\SQLEXPRESS;Database=master;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Application Name=\"SQL Server Management Studio\";Command Timeout=0");
+            optionsBuilder.UseSqlServer
+                ("Server=KRISI\\SQLEXPRESS;Database=LibraryDB;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }

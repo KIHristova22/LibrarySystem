@@ -34,7 +34,7 @@ namespace Library.Areas.User.Controllers
 
             var myLoans = await _context.Loans
                 .Include(l => l.Book)
-                .Where(l => l.CustomerId == customer.Id)
+                .Where(l => l.CustomerId == customer.CustomerId) 
                 .ToListAsync();
 
             return View(myLoans);

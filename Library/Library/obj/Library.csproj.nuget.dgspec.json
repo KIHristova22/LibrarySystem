@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kihristova22\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj": {}
+    "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kihristova22\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj": {
+    "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kihristova22\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj",
+        "projectUniqueName": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj",
         "projectName": "Library",
-        "projectPath": "C:\\Users\\kihristova22\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj",
-        "packagesPath": "C:\\Users\\kihristova22\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kihristova22\\Documents\\LibrarySystem\\Library\\Library\\obj\\",
+        "projectPath": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library\\Library.csproj",
+        "packagesPath": "C:\\Users\\krist\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\kihristova22\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\krist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -65,6 +71,10 @@
               "version": "[9.0.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
               "target": "Package",
               "version": "[9.0.0, )"
             },
@@ -96,6 +106,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.11, 9.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[9.0.11, 9.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.11, 9.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[9.0.11, 9.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -104,7 +132,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
