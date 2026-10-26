@@ -1,31 +1,51 @@
 ﻿@model IEnumerable<Library.Models.Book>
-<Library.Models.Book>
-    @{
-    ViewData["Title"] = "List with books";
+
+@{
+    ViewData["Title"] = "Каталог с книги";
 }
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add a new book</a>
-</p>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 text-primary fw-bold">📚 Каталог с книги</h1>
+        <a asp-action="Create" class="btn btn-success shadow-sm">
+            ➕ Добави нова книга
+        </a>
+    </div>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Price</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => item.Title)</td>
-            <td>@Html.DisplayFor(modelItem => item.Price)</td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId" class="btn btn-sm btn-warning">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId" class="btn btn-sm btn-danger">Delete</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-</Library.Models.Book>
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4">Заглавие</th>
+                            <th>Цена</th>
+                            <th class="text-end pe-4">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">Все още няма добавени книги.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model) {
+                                <tr>
+                                    <td class="ps-4 fw-semibold">@item.Title</td>
+                                    <td><span class="badge bg-secondary">@item.Price.ToString("0.00") лв.</span></td>
+                                    <td class="text-end pe-4">
+                                        <a asp-action="Edit" asp-route-id="@item.BookId" class="btn btn-sm btn-outline-warning me-1">Редактирай</a>
+                                        <a asp-action="Delete" asp-route-id="@item.BookId" class="btn btn-sm btn-outline-danger">Изтрий</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
