@@ -1,8 +1,14 @@
-﻿namespace Library.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Category
+namespace Library.Models
 {
-    public int CategoryId { get; set; }
-    public string Name { get; set; }=string.Empty;
-    public List<Book> Books { get; set; } = new();
+    public class Category
+    {
+        public int CategoryId { get; set; }
+
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        public ICollection<Book> Books { get; set; } = new List<Book>();
+    }
 }

@@ -1,10 +1,17 @@
-﻿namespace Library.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class Author
+namespace Library.Models
 {
-    public int AuthorId { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string FullName => $"{FirstName} {LastName}";
-    public List<Book> Books { get; set; }
+    public class Author
+    {
+        public int AuthorId { get; set; }
+
+        [Required]
+        public string FirstName { get; set; } = string.Empty;
+
+        [Required]
+        public string LastName { get; set; } = string.Empty;
+
+        public ICollection<Book> Books { get; set; } = new List<Book>();
+    }
 }
