@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Library.Models.Author>
+
+@{
+    ViewData["Title"] = "Authors";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Authors</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-outline-dark">+ Add Author</a>
+        }
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">First Name</th>
+                        <th>Last Name</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th class="text-end pe-4">Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr><td colspan="3" class="text-center py-4 text-muted">No authors added yet.</td></tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold">@item.FirstName</td>
+                                <td>@item.LastName</td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td class="text-end pe-4">
+                                        <a asp-action="Edit" asp-route-id="@item.AuthorId" class="text-decoration-none me-3 text-primary">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@item.AuthorId" class="text-decoration-none text-danger">Delete</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

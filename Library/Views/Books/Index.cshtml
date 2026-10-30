@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Library.Models.Book>
+
+@{
+    ViewData["Title"] = "Book Register";
+}
+
+<div class="container py-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark mb-0">Book Register</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-outline-dark shadow-sm">+ Add Book</a>
+        }
+    </div>
+
+    <div class="card border-primary shadow-sm mb-3">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0 bg-white">
+                <thead class="table-primary text-dark">
+                    <tr>
+                        <th class="py-3 ps-3">Title</th>
+                        <th class="py-3">Author</th>
+                        <th class="py-3">Category</th>
+                        <th class="py-3">Price</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th class="py-3 text-center">Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">No books added yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model) {
+                            <tr>
+                                <td class="ps-3 fw-semibold">@item.Title</td>
+                                <td>@(item.Author != null ? $"{item.Author.FirstName} {item.Author.LastName}" : "Unknown")</td>
+                                <td>@(item.Category != null ? item.Category.Name : "None")</td>
+                                <td>$@item.Price.ToString("0.00")</td>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-route-id="@item.BookId" class="text-primary text-decoration-none me-2">Edit</a>
+                                        <span class="text-muted">|</span>
+                                        <a asp-action="Delete" asp-route-id="@item.BookId" class="text-danger text-decoration-none ms-2">Delete</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="text-muted small">
+            Page @(ViewBag.CurrentPage ?? 1) of @(ViewBag.TotalPages ?? 1)
+        </div>
+
+        @if (ViewBag.TotalPages != null && ViewBag.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)">Previous</a>
+                    </li>
+
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+</div>
