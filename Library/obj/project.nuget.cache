@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KjIUF3G5cyA=",
+  "dgSpecHash": "CjR45mPNAHI=",
   "success": true,
   "projectFilePath": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library.csproj",
   "expectedPackageFiles": [
@@ -55,6 +55,7 @@
     "C:\\Users\\krist\\.nuget\\packages\\humanizer.core.zh-hans\\2.14.1\\humanizer.core.zh-hans.2.14.1.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\humanizer.core.zh-hant\\2.14.1\\humanizer.core.zh-hant.2.14.1.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\10.0.14\\microsoft.aspnetcore.identity.entityframeworkcore.10.0.14.nupkg.sha512",
+    "C:\\Users\\krist\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\9.0.0\\microsoft.aspnetcore.identity.ui.9.0.0.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.24\\microsoft.aspnetcore.razor.language.6.0.24.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.build\\17.11.48\\microsoft.build.17.11.48.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",
@@ -80,6 +81,7 @@
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\10.0.14\\microsoft.entityframeworkcore.sqlite.10.0.14.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\10.0.14\\microsoft.entityframeworkcore.sqlite.core.10.0.14.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.14\\microsoft.extensions.dependencymodel.10.0.14.nupkg.sha512",
+    "C:\\Users\\krist\\.nuget\\packages\\microsoft.extensions.fileproviders.embedded\\9.0.0\\microsoft.extensions.fileproviders.embedded.9.0.0.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.net.stringtools\\17.11.48\\microsoft.net.stringtools.17.11.48.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.visualstudio.solutionpersistence\\1.0.52\\microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
     "C:\\Users\\krist\\.nuget\\packages\\microsoft.visualstudio.web.codegeneration\\10.0.2\\microsoft.visualstudio.web.codegeneration.10.0.2.nupkg.sha512",

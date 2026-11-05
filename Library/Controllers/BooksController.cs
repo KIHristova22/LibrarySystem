@@ -10,18 +10,32 @@ namespace Library.Controllers
     public class BooksController : Controller
     {
         private readonly LibraryContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly string _uploadsFolder = @"C:/Users/krist/Documents/LibrarySystem/Library/UploadedImages";
 
-        public BooksController(LibraryContext context)
+        public BooksController(LibraryContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var books = await _context.Books
+            int pageSize = 5;
+
+            var query = _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.Category)
+                .Include(b => b.Category);
+
+            int totalItems = await query.CountAsync();
+
+            var books = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
             return View(books);
         }
@@ -40,6 +54,34 @@ namespace Library.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (book.ImageFile != null && book.ImageFile.Length > 0)
+                {
+                    var permittedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    var extension = Path.GetExtension(book.ImageFile.FileName).ToLowerInvariant();
+
+                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("ImageFile", "Invalid file format. Only .jpg, .jpeg, and .png are allowed.");
+                        await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+                        return View(book);
+                    }
+
+                    if (!Directory.Exists(_uploadsFolder))
+                    {
+                        Directory.CreateDirectory(_uploadsFolder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                    string filePath = Path.Combine(_uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await book.ImageFile.CopyToAsync(fileStream);
+                    }
+
+                    book.ImageUrl = "/uploads/" + uniqueFileName;
+                }
+
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -72,6 +114,41 @@ namespace Library.Controllers
             {
                 try
                 {
+                    var existingBook = await _context.Books.AsNoTracking().FirstOrDefaultAsync(b => b.BookId == id);
+                    if (existingBook == null) return NotFound();
+
+                    if (book.ImageFile != null && book.ImageFile.Length > 0)
+                    {
+                        var permittedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                        var extension = Path.GetExtension(book.ImageFile.FileName).ToLowerInvariant();
+
+                        if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
+                        {
+                            ModelState.AddModelError("ImageFile", "Invalid file format. Only .jpg, .jpeg, and .png are allowed.");
+                            await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+                            return View(book);
+                        }
+
+                        if (!Directory.Exists(_uploadsFolder))
+                        {
+                            Directory.CreateDirectory(_uploadsFolder);
+                        }
+
+                        string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                        string filePath = Path.Combine(_uploadsFolder, uniqueFileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await book.ImageFile.CopyToAsync(fileStream);
+                        }
+
+                        book.ImageUrl = "/uploads/" + uniqueFileName;
+                    }
+                    else
+                    {
+                        book.ImageUrl = existingBook.ImageUrl;
+                    }
+
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -116,6 +193,16 @@ namespace Library.Controllers
             var book = await _context.Books.FindAsync(id);
             if (book != null)
             {
+                if (!string.IsNullOrEmpty(book.ImageUrl))
+                {
+                    string fileName = Path.GetFileName(book.ImageUrl);
+                    string oldFilePath = Path.Combine(_uploadsFolder, fileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
                 _context.Books.Remove(book);
                 await _context.SaveChangesAsync();
             }

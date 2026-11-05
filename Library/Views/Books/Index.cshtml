@@ -18,7 +18,8 @@
             <table class="table table-bordered table-hover align-middle mb-0 bg-white">
                 <thead class="table-primary text-dark">
                     <tr>
-                        <th class="py-3 ps-3">Title</th>
+                        <th class="py-3 ps-3" style="width: 90px;">Thumbnail</th>
+                        <th class="py-3">Title</th>
                         <th class="py-3">Author</th>
                         <th class="py-3">Category</th>
                         <th class="py-3">Price</th>
@@ -32,14 +33,24 @@
                     @if (!Model.Any())
                     {
                         <tr>
-                            <td colspan="5" class="text-center py-4 text-muted">No books added yet.</td>
+                            <td colspan="6" class="text-center py-4 text-muted">No books added yet.</td>
                         </tr>
                     }
                     else
                     {
                         @foreach (var item in Model) {
                             <tr>
-                                <td class="ps-3 fw-semibold">@item.Title</td>
+                                <td class="ps-3">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="Cover" style="width: 45px; height: 60px; object-fit: cover;" class="rounded shadow-sm" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">No Image</span>
+                                    }
+                                </td>
+                                <td class="fw-semibold">@item.Title</td>
                                 <td>@(item.Author != null ? $"{item.Author.FirstName} {item.Author.LastName}" : "Unknown")</td>
                                 <td>@(item.Category != null ? item.Category.Name : "None")</td>
                                 <td>$@item.Price.ToString("0.00")</td>

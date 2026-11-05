@@ -18,5 +18,10 @@ namespace Library.Models
 
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
+        [Display(Name = "Book Cover")]
+        public string? ImageUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
     }
 }

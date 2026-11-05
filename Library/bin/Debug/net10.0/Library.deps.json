@@ -9,6 +9,7 @@
       "Library/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "10.0.14",
+          "Microsoft.AspNetCore.Identity.UI": "9.0.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "10.0.14",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "10.0.2"
         },
@@ -564,6 +565,14 @@
           "lib/net10.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll": {
             "assemblyVersion": "10.0.14.0",
             "fileVersion": "10.0.1426.52326"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Identity.UI/9.0.0": {
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Identity.UI.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
           }
         }
       },
@@ -2128,6 +2137,13 @@
       "sha512": "sha512-GPU3K0HaLlYu0dnocEglRhrnYRu6VTJocynD5TF8I2lvcMsNzhv46WJLxh/USxu6hgmOrNZH/VhGl4ckdiPHpg==",
       "path": "microsoft.aspnetcore.identity.entityframeworkcore/10.0.14",
       "hashPath": "microsoft.aspnetcore.identity.entityframeworkcore.10.0.14.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Identity.UI/9.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VCOH8nyG/zU9BXoL77GncmKL3szxWX0oasYVZP3pvWYRxqr9aHnWBu14JBa2SbbvhCA7vsSWfs0byeAwaiV4DA==",
+      "path": "microsoft.aspnetcore.identity.ui/9.0.0",
+      "hashPath": "microsoft.aspnetcore.identity.ui.9.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Razor.Language/6.0.24": {
       "type": "package",
