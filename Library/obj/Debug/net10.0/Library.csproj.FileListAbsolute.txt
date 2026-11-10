@@ -55,7 +55,6 @@ C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\rjsmcshtml.dswa
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\scopedcss\bundle\Library.styles.css
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\scopedcss\projectbundle\Library.bundle.scp.css
-C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\pp8kl35ur8-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\md0ybo3cn4-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\80l2mev20u-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\qrehndlzvd-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -417,3 +416,4 @@ C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\a3yg
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\nezrqnk58p-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\v0zgfp0y55-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\yfc7ypekbg-{0}-mlv21k5csn-mlv21k5csn.gz
+C:\Users\krist\Documents\LibrarySystem\Library\obj\Debug\net10.0\compressed\pp8kl35ur8-{0}-xrc29p8x98-xrc29p8x98.gz

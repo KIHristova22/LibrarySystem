@@ -1,4 +1,6 @@
-﻿using Library.Models;
+﻿using System.IO;
+using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,15 +8,26 @@ namespace Library.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly string _profileImagesFolder;
+
+        private static readonly HashSet<string> AllowedProfileExtensions =
+            new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".png" };
+
+        private const long MaxProfilePictureSizeBytes = 5 * 1024 * 1024;
 
         public AccountController(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IWebHostEnvironment environment)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _profileImagesFolder = Path.Combine(
+                environment.ContentRootPath,
+                "UploadedImages",
+                "Profiles");
         }
 
         [HttpGet]
@@ -33,23 +46,29 @@ namespace Library.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            var result = await _signInManager.PasswordSignInAsync(
-                email,
-                password,
-                isPersistent: false,
-                lockoutOnFailure: false);
+            // Look up the account by email, then sign in using its username.
+            var user = await _userManager.FindByEmailAsync(email);
 
-            if (result.Succeeded)
+            if (user != null)
             {
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                {
-                    return LocalRedirect(returnUrl);
-                }
+                var result = await _signInManager.PasswordSignInAsync(
+                    user.UserName!,
+                    password,
+                    isPersistent: false,
+                    lockoutOnFailure: false);
 
-                return RedirectToAction("Index", "Books");
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+
+                    return RedirectToAction("Index", "Books");
+                }
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ModelState.AddModelError(string.Empty, "Invalid email or password.");
             return View();
         }
 
@@ -68,40 +87,149 @@ namespace Library.Controllers
                 return View(model);
             }
 
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
-                UserName = model.Email,
+                UserName = model.UserName,
                 Email = model.Email,
                 EmailConfirmed = true
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                var roleResult = await _userManager.AddToRoleAsync(user, "User");
-
-                if (!roleResult.Succeeded)
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in roleResult.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-
-                    await _userManager.DeleteAsync(user);
-                    return View(model);
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Books");
+                return View(model);
             }
 
-            foreach (var error in result.Errors)
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
+            if (!roleResult.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                foreach (var error in roleResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                await _userManager.DeleteAsync(user);
+                return View(model);
             }
+
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return RedirectToAction("Index", "Books");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Challenge();
+            }
+
+            var model = new ProfileViewModel
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                ProfilePictureUrl = user.ProfilePictureUrl
+            };
 
             return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(ProfileViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Challenge();
+            }
+
+            var image = model.ProfilePicture;
+
+            if (image == null || image.Length == 0)
+            {
+                ModelState.AddModelError(
+                    nameof(model.ProfilePicture),
+                    "Choose a JPG or PNG image to upload.");
+            }
+            else
+            {
+                var extension = Path.GetExtension(
+                    Path.GetFileName(image.FileName));
+
+                if (!AllowedProfileExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError(
+                        nameof(model.ProfilePicture),
+                        "Only .jpg and .png files are allowed.");
+                }
+
+                if (image.Length > MaxProfilePictureSizeBytes)
+                {
+                    ModelState.AddModelError(
+                        nameof(model.ProfilePicture),
+                        "The image must be 5 MB or smaller.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                model.Email = user.Email;
+                model.UserName = user.UserName;
+                model.ProfilePictureUrl = user.ProfilePictureUrl;
+                return View(model);
+            }
+
+            Directory.CreateDirectory(_profileImagesFolder);
+
+            var fileExtension = Path.GetExtension(
+                Path.GetFileName(image!.FileName)).ToLowerInvariant();
+            var fileName = $"{Guid.NewGuid():N}{fileExtension}";
+            var filePath = Path.Combine(_profileImagesFolder, fileName);
+
+            await using (var stream = new FileStream(
+                filePath,
+                FileMode.CreateNew,
+                FileAccess.Write,
+                FileShare.None))
+            {
+                await image.CopyToAsync(stream);
+            }
+
+            var oldPictureUrl = user.ProfilePictureUrl;
+            user.ProfilePictureUrl = $"/uploads/Profiles/{fileName}";
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                System.IO.File.Delete(filePath);
+
+                foreach (var error in updateResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                model.Email = user.Email;
+                model.UserName = user.UserName;
+                model.ProfilePictureUrl = oldPictureUrl;
+                return View(model);
+            }
+
+            DeletePreviousProfilePicture(oldPictureUrl);
+            TempData["ProfileMessage"] = "Your profile picture has been updated.";
+
+            return RedirectToAction(nameof(Profile));
         }
 
         [HttpPost]
@@ -110,6 +238,27 @@ namespace Library.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Books");
+        }
+
+        private void DeletePreviousProfilePicture(string? imageUrl)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                return;
+            }
+
+            var fileName = Path.GetFileName(imageUrl);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return;
+            }
+
+            var filePath = Path.Combine(_profileImagesFolder, fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
         }
     }
 }

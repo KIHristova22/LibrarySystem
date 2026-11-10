@@ -1,0 +1,87 @@
+@model Library.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+    var displayName = Model.UserName ?? Model.Email ?? "Reader";
+    var initials = !string.IsNullOrWhiteSpace(displayName)
+        ? displayName.Trim()[0].ToString().ToUpperInvariant()
+        : "R";
+}
+
+<div class="profile-page">
+    <div class="profile-heading">
+        <div>
+            <p class="profile-eyebrow">YOUR ACCOUNT</p>
+            <h1>My Profile</h1>
+            <p class="profile-subtitle">Manage your account details and profile picture.</p>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <section class="profile-summary">
+            @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+            {
+                <img class="profile-avatar"
+                     src="@Model.ProfilePictureUrl"
+                     alt="Profile picture" />
+            }
+            else
+            {
+                <div class="profile-avatar profile-avatar-fallback" aria-label="Profile picture placeholder">
+                    @initials
+                </div>
+            }
+
+            <div class="profile-identity">
+                <h2>@displayName</h2>
+                <p>@Model.Email</p>
+            </div>
+        </section>
+
+        <div class="profile-divider"></div>
+
+        @if (TempData["ProfileMessage"] is string message)
+        {
+            <div class="alert alert-success" role="status">@message</div>
+        }
+
+        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+
+        <dl class="profile-details">
+            <div>
+                <dt>Email address</dt>
+                <dd>@(Model.Email ?? "Not provided")</dd>
+            </div>
+            <div>
+                <dt>Username</dt>
+                <dd>@(Model.UserName ?? "Not provided")</dd>
+            </div>
+        </dl>
+
+        <form asp-controller="Account"
+              asp-action="Profile"
+              method="post"
+              enctype="multipart/form-data"
+              class="profile-upload-form">
+            <div class="profile-upload-heading">
+                <h3>Profile picture</h3>
+                <p>Choose a JPG or PNG image, up to 5 MB.</p>
+            </div>
+
+            <label asp-for="ProfilePicture" class="form-label">Choose an image</label>
+            <input asp-for="ProfilePicture"
+                   type="file"
+                   class="form-control"
+                   accept=".jpg,.png,image/jpeg,image/png" />
+            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+
+            <button type="submit" class="btn btn-primary profile-save-button">
+                Upload picture
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

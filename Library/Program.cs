@@ -1,8 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Library.Data;
-using Microsoft.Extensions.FileProviders;
+using Library.Models;
 using Microsoft.AspNetCore.Identity;
-using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,10 @@ var dbPath = Path.Combine(projectRoot, "library.db");
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseSqlite($"Data Source={dbPath}"));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+    })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<LibraryContext>();
 
@@ -20,12 +23,11 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-string uploadsPhysicalPath = @"C:/Users/krist/Documents/LibrarySystem/Library/UploadedImages";
+var uploadsPhysicalPath = Path.Combine(projectRoot, "UploadedImages");
+var profileUploadsPhysicalPath = Path.Combine(uploadsPhysicalPath, "Profiles");
 
-if (!Directory.Exists(uploadsPhysicalPath))
-{
-    Directory.CreateDirectory(uploadsPhysicalPath);
-}
+Directory.CreateDirectory(uploadsPhysicalPath);
+Directory.CreateDirectory(profileUploadsPhysicalPath);
 
 app.UseStaticFiles(new StaticFileOptions
 {
