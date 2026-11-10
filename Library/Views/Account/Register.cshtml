@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Library.Models.RegisterViewModel
+
+@{
     ViewData["Title"] = "Register";
 }
 
@@ -7,28 +9,40 @@
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
                 <h2 class="fw-bold mb-4 text-center">Create Account</h2>
-                
+
                 <form asp-action="Register" method="post">
                     <div asp-validation-summary="All" class="text-danger mb-3 small"></div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Email</label>
-                        <input name="email" type="email" class="form-control" required placeholder="name@example.com" />
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Password</label>
-                        <input name="password" type="password" class="form-control" required placeholder="At least 6 characters, numbers, etc." />
+                        <label asp-for="Password" class="form-label fw-semibold"></label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword" class="form-label fw-semibold"></label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Register</button>
                 </form>
 
                 <div class="text-center mt-3">
-                    <span class="text-muted small">Already have an account?</span> 
+                    <span class="text-muted small">Already have an account?</span>
                     <a asp-action="Login" class="text-decoration-none small fw-semibold">Log in</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
