@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Library.Data;
 using Library.Models;
+using System.IO;
 
 namespace Library.Controllers
 {
     public class BooksController : Controller
     {
         private readonly LibraryContext _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _uploadsFolder = @"C:/Users/krist/Documents/LibrarySystem/Library/UploadedImages";
 
-        public BooksController(LibraryContext context, IWebHostEnvironment webHostEnvironment)
+        public BooksController(LibraryContext context)
         {
             _context = context;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index(int page = 1)
@@ -52,43 +52,43 @@ namespace Library.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Book book)
         {
-            if (ModelState.IsValid)
+            if (book.ImageFile != null && book.ImageFile.Length > 0)
             {
-                if (book.ImageFile != null && book.ImageFile.Length > 0)
+                var permittedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(book.ImageFile.FileName).ToLowerInvariant();
+
+                if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
                 {
-                    var permittedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                    var extension = Path.GetExtension(book.ImageFile.FileName).ToLowerInvariant();
-
-                    if (string.IsNullOrEmpty(extension) || !permittedExtensions.Contains(extension))
-                    {
-                        ModelState.AddModelError("ImageFile", "Invalid file format. Only .jpg, .jpeg, and .png are allowed.");
-                        await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
-                        return View(book);
-                    }
-
-                    if (!Directory.Exists(_uploadsFolder))
-                    {
-                        Directory.CreateDirectory(_uploadsFolder);
-                    }
-
-                    string uniqueFileName = Guid.NewGuid().ToString() + extension;
-                    string filePath = Path.Combine(_uploadsFolder, uniqueFileName);
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await book.ImageFile.CopyToAsync(fileStream);
-                    }
-
-                    book.ImageUrl = "/uploads/" + uniqueFileName;
+                    ModelState.AddModelError("ImageFile", "Invalid file format. Only .jpg, .jpeg, and .png are allowed.");
+                    await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+                    return View(book);
                 }
 
-                _context.Add(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (!Directory.Exists(_uploadsFolder))
+                {
+                    Directory.CreateDirectory(_uploadsFolder);
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                string filePath = Path.Combine(_uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await book.ImageFile.CopyToAsync(fileStream);
+                }
+
+                book.ImageUrl = "/uploads/" + uniqueFileName;
             }
 
-            await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
-            return View(book);
+            if (!ModelState.IsValid)
+            {
+                await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+                return View(book);
+            }
+
+            _context.Add(book);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
@@ -142,6 +142,15 @@ namespace Library.Controllers
                             await book.ImageFile.CopyToAsync(fileStream);
                         }
 
+                        string oldFilePath = string.IsNullOrEmpty(existingBook.ImageUrl)
+                            ? null
+                            : Path.Combine(_uploadsFolder, Path.GetFileName(existingBook.ImageUrl));
+
+                        if (!string.IsNullOrEmpty(oldFilePath) && System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+
                         book.ImageUrl = "/uploads/" + uniqueFileName;
                     }
                     else
@@ -163,6 +172,7 @@ namespace Library.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -197,6 +207,7 @@ namespace Library.Controllers
                 {
                     string fileName = Path.GetFileName(book.ImageUrl);
                     string oldFilePath = Path.Combine(_uploadsFolder, fileName);
+
                     if (System.IO.File.Exists(oldFilePath))
                     {
                         System.IO.File.Delete(oldFilePath);
@@ -206,6 +217,7 @@ namespace Library.Controllers
                 _context.Books.Remove(book);
                 await _context.SaveChangesAsync();
             }
+
             return RedirectToAction(nameof(Index));
         }
 

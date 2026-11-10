@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
 
 namespace Library.Models
 {
@@ -18,6 +19,7 @@ namespace Library.Models
 
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
+
         [Display(Name = "Book Cover")]
         public string? ImageUrl { get; set; }
 
