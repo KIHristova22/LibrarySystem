@@ -2,7 +2,6 @@
 using Library.Data;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -29,22 +28,11 @@ namespace Library.Controllers
         {
             const int pageSize = 5;
 
-            if (page < 1)
-            {
-                page = 1;
-            }
-
             var query = _context.Books
                 .Include(book => book.Author)
                 .Include(book => book.Category);
 
             var totalItems = await query.CountAsync();
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-            if (totalPages > 0 && page > totalPages)
-            {
-                page = totalPages;
-            }
 
             var books = await query
                 .OrderBy(book => book.BookId)
@@ -53,7 +41,7 @@ namespace Library.Controllers
                 .ToListAsync();
 
             ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
             ViewBag.BorrowedBookIds = await _context.BorrowRecords
                 .Where(record => !record.IsReturned)
                 .Select(record => record.BookId)
@@ -62,106 +50,10 @@ namespace Library.Controllers
             return View(books);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Borrow(int id)
-        {
-            var book = await _context.Books.FindAsync(id);
-
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Challenge();
-            }
-
-            var isAlreadyBorrowed = await _context.BorrowRecords
-                .AnyAsync(record => record.BookId == id && !record.IsReturned);
-
-            if (isAlreadyBorrowed)
-            {
-                TempData["Error"] = "This book is already borrowed.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            _context.BorrowRecords.Add(new BorrowRecord
-            {
-                BookId = book.BookId,
-                UserId = userId,
-                BorrowDate = DateTime.Now,
-                IsReturned = false
-            });
-
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Book borrowed successfully.";
-            return RedirectToAction(nameof(MyBooks));
-        }
-
-        [Authorize]
-        public async Task<IActionResult> MyBooks()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Challenge();
-            }
-
-            var records = await _context.BorrowRecords
-                .Where(record => record.UserId == userId && !record.IsReturned)
-                .Include(record => record.Book)
-                    .ThenInclude(book => book.Author)
-                .Include(record => record.Book)
-                    .ThenInclude(book => book.Category)
-                .OrderByDescending(record => record.BorrowDate)
-                .ToListAsync();
-
-            return View(records);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Return(int id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Challenge();
-            }
-
-            var record = await _context.BorrowRecords
-                .FirstOrDefaultAsync(item =>
-                    item.BorrowRecordId == id &&
-                    item.UserId == userId &&
-                    !item.IsReturned);
-
-            if (record == null)
-            {
-                return NotFound();
-            }
-
-            record.IsReturned = true;
-            record.ReturnDate = DateTime.Now;
-
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Book returned successfully.";
-            return RedirectToAction(nameof(MyBooks));
-        }
-
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(int? categoryId)
         {
-            await PopulateDropdownsAsync();
+            await PopulateDropdownsAsync(selectedCategoryId: categoryId);
             return View();
         }
 
@@ -186,7 +78,6 @@ namespace Library.Controllers
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
-            TempData["Success"] = "Book added successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -255,7 +146,6 @@ namespace Library.Controllers
                 DeleteStoredImage(oldImageUrl);
             }
 
-            TempData["Success"] = "Book updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -296,7 +186,6 @@ namespace Library.Controllers
                 await _context.SaveChangesAsync();
 
                 DeleteStoredImage(imageUrl);
-                TempData["Success"] = "Book deleted successfully.";
             }
 
             return RedirectToAction(nameof(Index));

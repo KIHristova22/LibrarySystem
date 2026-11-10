@@ -6,23 +6,53 @@
 
 <div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
+        <div class="col-md-7 col-lg-6">
+            <div class="mb-4">
+                <p class="text-uppercase text-secondary small fw-bold mb-1">Library catalogue</p>
+                <h1 class="h2 fw-bold mb-1">Add a new category</h1>
+                <p class="text-secondary mb-0">Create a category for organizing books.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <h2 class="fw-bold mb-4">Add Category</h2>
+                    <form asp-controller="Categories"
+                          asp-action="Create"
+                          method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
 
-                    <form asp-action="Create">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small"></div>
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger"
+                             role="alert"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label fw-semibold">Category Name</label>
-                            <input asp-for="Name" class="form-control" required />
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold">
+                                Category name
+                            </label>
+                            <input asp-for="Name"
+                                   class="form-control"
+                                   maxlength="100"
+                                   placeholder="For example, Fiction" />
                             <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center mt-4">
-                            <a asp-action="Index" class="text-decoration-none text-muted">Back to List</a>
-                            <button type="submit" class="btn btn-primary px-4 fw-semibold">Save Category</button>
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            @if (ViewData["ReturnUrl"]?.ToString() == "/Books/Create")
+                            {
+                                <a asp-controller="Books"
+                                   asp-action="Create"
+                                   class="btn btn-light">Cancel</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Categories"
+                                   asp-action="Index"
+                                   class="btn btn-light">Cancel</a>
+                            }
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                Save category
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -30,3 +60,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

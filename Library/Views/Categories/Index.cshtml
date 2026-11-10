@@ -2,45 +2,82 @@
 
 @{
     ViewData["Title"] = "Categories";
+    var categories = Model?.ToList() ?? new List<Library.Models.Category>();
+    var isAdmin = User.IsInRole("Admin");
 }
 
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Categories</h2>
-        @if (User.IsInRole("Admin"))
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <p class="text-uppercase text-secondary small fw-bold mb-1">Library catalogue</p>
+            <h1 class="h2 fw-bold mb-1">Categories</h1>
+            <p class="text-secondary mb-0">Browse the categories used to organize books.</p>
+        </div>
+
+        @if (isAdmin)
         {
-            <a asp-action="Create" class="btn btn-outline-dark">+ Add Category</a>
+            <a asp-controller="Categories"
+               asp-action="Create"
+               class="btn btn-primary">
+                + Добави нова категория
+            </a>
         }
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0 align-middle">
+    @if (TempData["Success"] is string success)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="status">
+            @success
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">Category Name</th>
-                        @if (User.IsInRole("Admin"))
+                        <th class="py-3 ps-4">Category name</th>
+                        @if (isAdmin)
                         {
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="py-3 text-end pe-4">Actions</th>
                         }
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!Model.Any())
+                    @if (categories.Count == 0)
                     {
-                        <tr><td colspan="2" class="text-center py-4 text-muted">No categories added yet.</td></tr>
+                        <tr>
+                            <td colspan="@(isAdmin ? 2 : 1)" class="text-center py-5">
+                                <h2 class="h5 fw-semibold">No categories yet</h2>
+                                <p class="text-secondary mb-0">
+                                    Categories will appear here after they are added.
+                                </p>
+                            </td>
+                        </tr>
                     }
                     else
                     {
-                        foreach (var item in Model)
+                        @foreach (var category in categories)
                         {
                             <tr>
-                                <td class="ps-4 fw-semibold">@item.Name</td>
-                                @if (User.IsInRole("Admin"))
+                                <td class="ps-4 fw-semibold">@category.Name</td>
+
+                                @if (isAdmin)
                                 {
-                                    <td class="text-end pe-4">
-                                        <a asp-action="Edit" asp-route-id="@item.CategoryId" class="text-decoration-none me-3 text-primary">Edit</a>
-                                        <a asp-action="Delete" asp-route-id="@item.CategoryId" class="text-decoration-none text-danger">Delete</a>
+                                    <td class="text-end pe-4 text-nowrap">
+                                        <a asp-controller="Categories"
+                                           asp-action="Edit"
+                                           asp-route-id="@category.CategoryId"
+                                           class="text-decoration-none me-3">Edit</a>
+
+                                        <a asp-controller="Categories"
+                                           asp-action="Delete"
+                                           asp-route-id="@category.CategoryId"
+                                           class="text-danger text-decoration-none">Delete</a>
                                     </td>
                                 }
                             </tr>

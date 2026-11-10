@@ -5,44 +5,104 @@
 }
 
 <div class="container py-4">
-    <h2>Add New Book</h2>
-    <hr />
-    <div class="row">
-        <div class="col-md-6">
-            <form asp-action="Create" method="post" enctype="multipart/form-data">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+        <div>
+            <p class="text-uppercase text-secondary small fw-bold mb-1">Library catalogue</p>
+            <h1 class="h2 fw-bold mb-0">Add a book</h1>
+            <p class="text-secondary mb-0">Enter the book details and add it to your collection.</p>
+        </div>
 
-                <div class="mb-3">
-                    <label asp-for="Title" class="form-label"></label>
-                    <input asp-for="Title" class="form-control" />
-                    <span asp-validation-for="Title" class="text-danger"></span>
-                </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to books</a>
+    </div>
 
-                <div class="mb-3">
-                    <label asp-for="Price" class="form-label"></label>
-                    <input asp-for="Price" class="form-control" />
-                    <span asp-validation-for="Price" class="text-danger"></span>
-                </div>
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <form asp-controller="Books"
+                  asp-action="Create"
+                  method="post"
+                  enctype="multipart/form-data">
 
-                <div class="mb-3">
-                    <label asp-for="AuthorId" class="form-label">Author</label>
-                    <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.Authors"></select>
-                </div>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <div class="mb-3">
-                    <label asp-for="CategoryId" class="form-label">Category</label>
-                    <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
-                </div>
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label asp-for="Title" class="form-label fw-semibold"></label>
+                        <input asp-for="Title" class="form-control" placeholder="Enter the book title" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
 
-                <div class="mb-3">
-                    <label asp-for="ImageFile" class="form-label"></label>
-                    <input type="file" asp-for="ImageFile" class="form-control" />
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
-                </div>
+                    <div class="col-md-4">
+                        <label asp-for="Price" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input asp-for="Price" class="form-control" type="number" step="0.01" min="0" placeholder="0.00" />
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
 
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Create</button>
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label asp-for="AuthorId" class="form-label fw-semibold mb-0">Author</label>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Authors"
+                                   asp-action="Create"
+                                   class="small text-decoration-none">
+                                    + Add new author
+                                </a>
+                            }
+                        </div>
+
+                        <select asp-for="AuthorId"
+                                class="form-select"
+                                asp-items="ViewBag.Authors">
+                            <option value="">Select an author</option>
+                        </select>
+
+                        <span asp-validation-for="AuthorId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label asp-for="CategoryId" class="form-label fw-semibold mb-0">
+                                Category
+                            </label>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Categories"
+                                   asp-action="Create"
+                                   asp-route-returnUrl="/Books/Create"
+                                   class="small text-decoration-none">
+                                    + Add new category
+                                </a>
+                            }
+                        </div>
+
+                        <select asp-for="CategoryId"
+                                class="form-select"
+                                asp-items="ViewBag.Categories">
+                            <option value="">Select a category</option>
+                        </select>
+
+                        <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="ImageFile" class="form-label fw-semibold">Book cover</label>
+                        <input asp-for="ImageFile"
+                               type="file"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,image/jpeg,image/png" />
+                        <div class="form-text">Optional. JPG, JPEG, or PNG, up to 5 MB.</div>
+                        <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12 d-flex flex-wrap gap-2 pt-2">
+                        <button type="submit" class="btn btn-primary px-4">Add book</button>
+                        <a asp-action="Index" class="btn btn-light">Cancel</a>
+                    </div>
                 </div>
             </form>
         </div>
@@ -50,5 +110,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }
