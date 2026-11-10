@@ -46,13 +46,12 @@ namespace Library.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            // Look up the account by email, then sign in using its username.
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null)
+            if (user != null && !string.IsNullOrEmpty(user.UserName))
             {
                 var result = await _signInManager.PasswordSignInAsync(
-                    user.UserName!,
+                    user.UserName,
                     password,
                     isPersistent: false,
                     lockoutOnFailure: false);
@@ -128,6 +127,7 @@ namespace Library.Controllers
         public async Task<IActionResult> Profile()
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return Challenge();
@@ -149,6 +149,7 @@ namespace Library.Controllers
         public async Task<IActionResult> Profile(ProfileViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
+
             if (user == null)
             {
                 return Challenge();
@@ -248,6 +249,7 @@ namespace Library.Controllers
             }
 
             var fileName = Path.GetFileName(imageUrl);
+
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 return;

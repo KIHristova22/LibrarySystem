@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Library.Models
 {
     public class BorrowRecord
@@ -12,6 +14,6 @@ namespace Library.Models
 
         public DateTime BorrowDate { get; set; } = DateTime.Now;
         public DateTime? ReturnDate { get; set; }
-        public bool IsReturned { get; set; }
+        public bool IsReturned { get; set; } = false;
     }
 }

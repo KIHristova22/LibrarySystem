@@ -10,43 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc110595-dd16-49ae-90a6-575d202434b4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Models/ApplicationUser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models/ProfileViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/Account/Profile.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/LibraryContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/LibraryContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/BorrowRecord.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/BorrowRecord.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/BooksController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/BooksController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/ProfileViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/ProfileViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/RegisterViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Models/RegisterViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Account/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Account/Login.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Account/Profile.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Account/Profile.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Account/Register.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Account/Register.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Books/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Books/Index.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/_ViewImports.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/_ViewImports.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.staticwebassets.endpoints.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.staticwebassets.endpoints.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.staticwebassets.runtime.json" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.staticwebassets.runtime.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/library.db" beforeDir="false" afterPath="$PROJECT_DIR$/library.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/compressed/pp8kl35ur8-{0}-b9sayid5wm-b9sayid5wm.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rbcswa.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rbcswa.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/ref/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/ref/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/refint/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/refint/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjimswa.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjimswa.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rpswa.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rpswa.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.build.endpoints.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.build.endpoints.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.build.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.build.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.build.json.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.build.json.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.development.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/staticwebassets.development.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wwwroot/css/site.css" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/css/site.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -200,7 +173,7 @@
       <workItem from="1793906091760" duration="4031000" />
       <workItem from="1794164591637" duration="1948000" />
       <workItem from="1794339862431" duration="441000" />
-      <workItem from="1794340431772" duration="2623000" />
+      <workItem from="1794340431772" duration="4041000" />
     </task>
     <task id="LOCAL-00001" summary="configure LibraryContext, fix model properties and update views for Library system">
       <option name="closed" value="true" />
@@ -370,7 +343,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794341865631</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="add profile functions">
+      <option name="closed" value="true" />
+      <created>1794343272215</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1794343272215</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -411,7 +392,8 @@
     <MESSAGE value="task 5" />
     <MESSAGE value="borrow a book func" />
     <MESSAGE value="add confirm password func" />
-    <option name="LAST_COMMIT_MESSAGE" value="add confirm password func" />
+    <MESSAGE value="add profile functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="add profile functions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

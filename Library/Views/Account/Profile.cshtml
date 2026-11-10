@@ -3,49 +3,50 @@
 @{
     ViewData["Title"] = "My Profile";
     var displayName = Model.UserName ?? Model.Email ?? "Reader";
-    var initials = !string.IsNullOrWhiteSpace(displayName)
-        ? displayName.Trim()[0].ToString().ToUpperInvariant()
-        : "R";
+    var initials = string.Join(
+        "",
+        displayName.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Take(2)
+            .Select(part => part[0].ToString().ToUpperInvariant()));
 }
 
 <div class="profile-page">
     <div class="profile-heading">
         <div>
-            <p class="profile-eyebrow">YOUR ACCOUNT</p>
+            <p class="eyebrow">YOUR ACCOUNT</p>
             <h1>My Profile</h1>
-            <p class="profile-subtitle">Manage your account details and profile picture.</p>
+            <p class="text-secondary mb-0">Manage your reader information and profile picture.</p>
         </div>
     </div>
 
-    <div class="profile-card">
-        <section class="profile-summary">
+    @if (TempData["ProfileMessage"] is string message)
+    {
+        <div class="alert alert-success" role="status">@message</div>
+    }
+
+    <section class="profile-card">
+        <div class="profile-summary">
             @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
             {
-                <img class="profile-avatar"
-                     src="@Model.ProfilePictureUrl"
-                     alt="Profile picture" />
+                <img class="profile-avatar" src="@Model.ProfilePictureUrl" alt="Profile picture" />
             }
             else
             {
-                <div class="profile-avatar profile-avatar-fallback" aria-label="Profile picture placeholder">
-                    @initials
+                <div class="profile-avatar profile-avatar-fallback" aria-label="Profile initials">
+                    @(string.IsNullOrWhiteSpace(initials) ? "R" : initials)
                 </div>
             }
 
-            <div class="profile-identity">
+            <div>
                 <h2>@displayName</h2>
                 <p>@Model.Email</p>
+                <span class="reader-badge">Library reader</span>
             </div>
-        </section>
+        </div>
 
-        <div class="profile-divider"></div>
+        <hr class="profile-divider" />
 
-        @if (TempData["ProfileMessage"] is string message)
-        {
-            <div class="alert alert-success" role="status">@message</div>
-        }
-
-        <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+        <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
 
         <dl class="profile-details">
             <div>
@@ -63,25 +64,17 @@
               method="post"
               enctype="multipart/form-data"
               class="profile-upload-form">
-            <div class="profile-upload-heading">
+            <div>
                 <h3>Profile picture</h3>
-                <p>Choose a JPG or PNG image, up to 5 MB.</p>
+                <p>Upload a JPG or PNG image. Maximum file size: 5 MB.</p>
             </div>
 
             <label asp-for="ProfilePicture" class="form-label">Choose an image</label>
-            <input asp-for="ProfilePicture"
-                   type="file"
-                   class="form-control"
+            <input asp-for="ProfilePicture" type="file" class="form-control"
                    accept=".jpg,.png,image/jpeg,image/png" />
-            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+            <span asp-validation-for="ProfilePicture" class="field-validation"></span>
 
-            <button type="submit" class="btn btn-primary profile-save-button">
-                Upload picture
-            </button>
+            <button type="submit" class="btn btn-accent mt-3">Update picture</button>
         </form>
-    </div>
+    </section>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

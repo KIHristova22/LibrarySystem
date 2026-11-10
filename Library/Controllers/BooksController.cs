@@ -29,11 +29,22 @@ namespace Library.Controllers
         {
             const int pageSize = 5;
 
+            if (page < 1)
+            {
+                page = 1;
+            }
+
             var query = _context.Books
                 .Include(book => book.Author)
                 .Include(book => book.Category);
 
             var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (totalPages > 0 && page > totalPages)
+            {
+                page = totalPages;
+            }
 
             var books = await query
                 .OrderBy(book => book.BookId)
@@ -42,7 +53,7 @@ namespace Library.Controllers
                 .ToListAsync();
 
             ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.TotalPages = totalPages;
             ViewBag.BorrowedBookIds = await _context.BorrowRecords
                 .Where(record => !record.IsReturned)
                 .Select(record => record.BookId)
@@ -57,12 +68,14 @@ namespace Library.Controllers
         public async Task<IActionResult> Borrow(int id)
         {
             var book = await _context.Books.FindAsync(id);
+
             if (book == null)
             {
                 return NotFound();
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userId))
             {
                 return Challenge();
@@ -95,6 +108,7 @@ namespace Library.Controllers
         public async Task<IActionResult> MyBooks()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userId))
             {
                 return Challenge();
@@ -118,6 +132,7 @@ namespace Library.Controllers
         public async Task<IActionResult> Return(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userId))
             {
                 return Challenge();
@@ -171,6 +186,7 @@ namespace Library.Controllers
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
+            TempData["Success"] = "Book added successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -183,6 +199,7 @@ namespace Library.Controllers
             }
 
             var book = await _context.Books.FindAsync(id);
+
             if (book == null)
             {
                 return NotFound();
@@ -203,6 +220,7 @@ namespace Library.Controllers
             }
 
             var existingBook = await _context.Books.FindAsync(id);
+
             if (existingBook == null)
             {
                 return NotFound();
@@ -237,6 +255,7 @@ namespace Library.Controllers
                 DeleteStoredImage(oldImageUrl);
             }
 
+            TempData["Success"] = "Book updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
@@ -268,6 +287,7 @@ namespace Library.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Books.FindAsync(id);
+
             if (book != null)
             {
                 var imageUrl = book.ImageUrl;
@@ -276,6 +296,7 @@ namespace Library.Controllers
                 await _context.SaveChangesAsync();
 
                 DeleteStoredImage(imageUrl);
+                TempData["Success"] = "Book deleted successfully.";
             }
 
             return RedirectToAction(nameof(Index));
@@ -333,6 +354,7 @@ namespace Library.Controllers
             }
 
             var fileName = Path.GetFileName(imageUrl);
+
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 return;
