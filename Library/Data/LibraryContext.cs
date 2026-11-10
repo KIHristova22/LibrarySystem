@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Library.Models;
 
 namespace Library.Data
 {
@@ -16,6 +16,7 @@ namespace Library.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Loan> Loans { get; set; }
+        public DbSet<BorrowRecord> BorrowRecords { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

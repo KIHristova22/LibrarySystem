@@ -1,0 +1,51 @@
+@model IEnumerable<Library.Models.BorrowRecord>
+
+@{
+    ViewData["Title"] = "My Books";
+}
+
+<div class="container py-4">
+    <h2>My Books</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <table class="table table-bordered table-hover mt-3">
+        <thead class="table-primary">
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Borrowed On</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center text-muted">You currently have no borrowed books.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Book.Title</td>
+                    <td>@(item.Book.Author != null ? $"{item.Book.Author.FirstName} {item.Book.Author.LastName}" : "Unknown")</td>
+                    <td>@item.BorrowDate.ToString("dd.MM.yyyy")</td>
+                    <td>
+                        <form asp-action="Return" method="post">
+                            <input type="hidden" name="id" value="@item.BorrowRecordId" />
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-warning">Return</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
