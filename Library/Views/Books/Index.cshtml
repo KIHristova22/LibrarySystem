@@ -6,6 +6,15 @@
     var currentPage = ViewBag.CurrentPage is int cp ? cp : 1;
     var totalPages = ViewBag.TotalPages is int tp ? tp : 1;
     var borrowedBookIds = ViewBag.BorrowedBookIds as List<int> ?? new List<int>();
+
+    var categories = ViewBag.Categories as List<Library.Models.Category>
+                     ?? new List<Library.Models.Category>();
+
+    var searchString = ViewBag.SearchString as string ?? string.Empty;
+    var categoryId = ViewBag.CategoryId as int?;
+    var onlyAvailable = ViewBag.OnlyAvailable is bool available && available;
+    var sortOrder = ViewBag.SortOrder as string ?? string.Empty;
+
     var isAdmin = User.IsInRole("Admin");
     var isUser = User.Identity?.IsAuthenticated == true
                  && User.IsInRole("User")
@@ -21,6 +30,121 @@
             <a asp-action="Create" class="btn btn-outline-dark shadow-sm">+ Add Book</a>
         }
     </div>
+
+    <form asp-action="Index" method="get" class="card card-body mb-3">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label for="searchString" class="form-label">Book title</label>
+                <input id="searchString"
+                       name="searchString"
+                       value="@searchString"
+                       class="form-control"
+                       placeholder="Search title" />
+            </div>
+
+            <div class="col-md-3">
+                <label for="categoryId" class="form-label">Category</label>
+                <select id="categoryId" name="categoryId" class="form-select">
+                    <option value="">All categories</option>
+
+                    @foreach (var category in categories)
+                    {
+                        if (categoryId == category.CategoryId)
+                        {
+                            <option value="@category.CategoryId" selected>
+                                @category.Name
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@category.CategoryId">
+                                @category.Name
+                            </option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label for="sortOrder" class="form-label">Sort by</label>
+                <select id="sortOrder" name="sortOrder" class="form-select">
+                    @if (sortOrder == "name_desc")
+                    {
+                        <option value="">Name: A–Z</option>
+                        <option value="name_desc" selected>Name: Z–A</option>
+                        <option value="date">Date: Oldest first</option>
+                        <option value="date_desc">Date: Newest first</option>
+                        <option value="price">Price: Low to high</option>
+                        <option value="price_desc">Price: High to low</option>
+                    }
+                    else if (sortOrder == "date")
+                    {
+                        <option value="">Name: A–Z</option>
+                        <option value="name_desc">Name: Z–A</option>
+                        <option value="date" selected>Date: Oldest first</option>
+                        <option value="date_desc">Date: Newest first</option>
+                        <option value="price">Price: Low to high</option>
+                        <option value="price_desc">Price: High to low</option>
+                    }
+                    else if (sortOrder == "date_desc")
+                    {
+                        <option value="">Name: A–Z</option>
+                        <option value="name_desc">Name: Z–A</option>
+                        <option value="date">Date: Oldest first</option>
+                        <option value="date_desc" selected>Date: Newest first</option>
+                        <option value="price">Price: Low to high</option>
+                        <option value="price_desc">Price: High to low</option>
+                    }
+                    else if (sortOrder == "price")
+                    {
+                        <option value="">Name: A–Z</option>
+                        <option value="name_desc">Name: Z–A</option>
+                        <option value="date">Date: Oldest first</option>
+                        <option value="date_desc">Date: Newest first</option>
+                        <option value="price" selected>Price: Low to high</option>
+                        <option value="price_desc">Price: High to low</option>
+                    }
+                    else if (sortOrder == "price_desc")
+                    {
+                        <option value="">Name: A–Z</option>
+                        <option value="name_desc">Name: Z–A</option>
+                        <option value="date">Date: Oldest first</option>
+                        <option value="date_desc">Date: Newest first</option>
+                        <option value="price">Price: Low to high</option>
+                        <option value="price_desc" selected>Price: High to low</option>
+                    }
+                    else
+                    {
+                        <option value="" selected>Name: A–Z</option>
+                        <option value="name_desc">Name: Z–A</option>
+                        <option value="date">Date: Oldest first</option>
+                        <option value="date_desc">Date: Newest first</option>
+                        <option value="price">Price: Low to high</option>
+                        <option value="price_desc">Price: High to low</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-check mt-4">
+                    <input id="onlyAvailable"
+                           name="onlyAvailable"
+                           type="checkbox"
+                           value="true"
+                           class="form-check-input"
+                           checked="@(onlyAvailable ? "checked" : null)" />
+                    <label for="onlyAvailable" class="form-check-label">
+                        Available only
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Apply</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        </div>
+    </form>
 
     @if (TempData["Success"] != null)
     {
@@ -86,9 +210,13 @@
                                         <span class="text-muted small">No Image</span>
                                     }
                                 </td>
+
                                 <td class="fw-semibold">@item.Title</td>
+
                                 <td>@(item.Author != null ? $"{item.Author.FirstName} {item.Author.LastName}" : "Unknown")</td>
+
                                 <td>@(item.Category != null ? item.Category.Name : "None")</td>
+
                                 <td>$@item.Price.ToString("0.00")</td>
 
                                 @if (isUser)
@@ -137,18 +265,36 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination pagination-sm mb-0">
                     <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@(currentPage - 1)">Previous</a>
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@(currentPage - 1)"
+                           asp-route-searchString="@searchString"
+                           asp-route-categoryId="@categoryId"
+                           asp-route-onlyAvailable="@(onlyAvailable ? true : null)"
+                           asp-route-sortOrder="@sortOrder">Previous</a>
                     </li>
 
                     @for (var i = 1; i <= totalPages; i++)
                     {
                         <li class="page-item @(currentPage == i ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-searchString="@searchString"
+                               asp-route-categoryId="@categoryId"
+                               asp-route-onlyAvailable="@(onlyAvailable ? true : null)"
+                               asp-route-sortOrder="@sortOrder">@i</a>
                         </li>
                     }
 
                     <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)">Next</a>
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-page="@(currentPage + 1)"
+                           asp-route-searchString="@searchString"
+                           asp-route-categoryId="@categoryId"
+                           asp-route-onlyAvailable="@(onlyAvailable ? true : null)"
+                           asp-route-sortOrder="@sortOrder">Next</a>
                     </li>
                 </ul>
             </nav>

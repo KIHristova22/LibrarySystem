@@ -24,28 +24,106 @@ namespace Library.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(
+            int page = 1,
+            string? searchString = null,
+            int? categoryId = null,
+            bool? onlyAvailable = null,
+            string? sortOrder = null)
         {
             const int pageSize = 5;
 
+            page = Math.Max(page, 1);
+            searchString = searchString?.Trim();
+
             var query = _context.Books
                 .Include(book => book.Author)
-                .Include(book => book.Category);
+                .Include(book => book.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                query = query.Where(book => book.Title.Contains(searchString));
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(book => book.CategoryId == categoryId.Value);
+            }
+
+            if (onlyAvailable == true)
+            {
+                query = query.Where(book =>
+                    !_context.BorrowRecords.Any(record =>
+                        record.BookId == book.BookId && !record.IsReturned));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    query = query
+                        .OrderByDescending(book => book.Title)
+                        .ThenBy(book => book.BookId);
+                    break;
+
+                case "date":
+                    // No Book publication date exists in the current model.
+                    // Fallback to BookId so the app still works.
+                    query = query
+                        .OrderBy(book => book.BookId);
+                    break;
+
+                case "date_desc":
+                    // No Book publication date exists in the current model.
+                    // Fallback to BookId so the app still works.
+                    query = query
+                        .OrderByDescending(book => book.BookId);
+                    break;
+
+                case "price":
+                    query = query
+                        .OrderBy(book => book.Price)
+                        .ThenBy(book => book.BookId);
+                    break;
+
+                case "price_desc":
+                    query = query
+                        .OrderByDescending(book => book.Price)
+                        .ThenBy(book => book.BookId);
+                    break;
+
+                default:
+                    query = query
+                        .OrderBy(book => book.Title)
+                        .ThenBy(book => book.BookId);
+                    break;
+            }
 
             var totalItems = await query.CountAsync();
 
             var books = await query
-                .OrderBy(book => book.BookId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
             ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.TotalPages = Math.Max(
+                1,
+                (int)Math.Ceiling(totalItems / (double)pageSize));
+
             ViewBag.BorrowedBookIds = await _context.BorrowRecords
                 .Where(record => !record.IsReturned)
                 .Select(record => record.BookId)
                 .ToListAsync();
+
+            ViewBag.Categories = await _context.Categories
+                .OrderBy(category => category.Name)
+                .ToListAsync();
+
+            ViewBag.SearchString = searchString;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.OnlyAvailable = onlyAvailable == true;
+            ViewBag.SortOrder = sortOrder ?? string.Empty;
 
             return View(books);
         }
