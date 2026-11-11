@@ -7,6 +7,9 @@
     var totalPages = ViewBag.TotalPages is int tp ? tp : 1;
     var borrowedBookIds = ViewBag.BorrowedBookIds as List<int> ?? new List<int>();
     var isAdmin = User.IsInRole("Admin");
+    var isUser = User.Identity?.IsAuthenticated == true
+                 && User.IsInRole("User")
+                 && !isAdmin;
 }
 
 <div class="container py-3">
@@ -45,7 +48,12 @@
                         <th class="py-3">Author</th>
                         <th class="py-3">Category</th>
                         <th class="py-3">Price</th>
-                        <th class="py-3 text-center">Borrow</th>
+
+                        @if (isUser)
+                        {
+                            <th class="py-3 text-center">Borrow</th>
+                        }
+
                         @if (isAdmin)
                         {
                             <th class="py-3 text-center">Actions</th>
@@ -56,7 +64,9 @@
                     @if (!books.Any())
                     {
                         <tr>
-                            <td colspan="@(isAdmin ? 7 : 6)" class="text-center py-4 text-muted">No books added yet.</td>
+                            <td colspan="@(5 + (isUser ? 1 : 0) + (isAdmin ? 1 : 0))" class="text-center py-4 text-muted">
+                                No books added yet.
+                            </td>
                         </tr>
                     }
                     else
@@ -80,10 +90,11 @@
                                 <td>@(item.Author != null ? $"{item.Author.FirstName} {item.Author.LastName}" : "Unknown")</td>
                                 <td>@(item.Category != null ? item.Category.Name : "None")</td>
                                 <td>$@item.Price.ToString("0.00")</td>
-                                <td class="text-center">
-                                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                                    {
-                                        if (isBorrowed)
+
+                                @if (isUser)
+                                {
+                                    <td class="text-center">
+                                        @if (isBorrowed)
                                         {
                                             <span class="badge bg-secondary">Borrowed</span>
                                         }
@@ -95,19 +106,17 @@
                                                 <button type="submit" class="btn btn-sm btn-success">Borrow</button>
                                             </form>
                                         }
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted small">Login to borrow</span>
-                                    }
-                                </td>
+                                    </td>
+                                }
 
                                 @if (isAdmin)
                                 {
                                     <td class="text-center">
                                         <a asp-action="Edit" asp-route-id="@item.BookId" class="text-primary text-decoration-none me-2">Edit</a>
                                         <span class="text-muted">|</span>
-                                        <a asp-action="Delete" asp-route-id="@item.BookId" class="text-danger text-decoration-none ms-2">Delete</a>
+                                        <a asp-action="Delete" asp-route-id="@item.BookId" class="text-danger text-decoration-none mx-2">Delete</a>
+                                        <span class="text-muted">|</span>
+                                        <a asp-action="Details" asp-route-id="@item.BookId" class="text-decoration-none ms-2">Details</a>
                                     </td>
                                 }
                             </tr>

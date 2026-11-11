@@ -11,18 +11,9 @@
   <component name="ChangeListManager">
     <list default="true" id="bc110595-dd16-49ae-90a6-575d202434b4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/AuthorsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/AuthorsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/BooksController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/BooksController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Controllers/CategoriesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/CategoriesController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Authors/Create.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Authors/Create.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Authors/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Authors/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Books/Create.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Books/Create.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Categories/Create.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Categories/Create.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Categories/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Categories/Index.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/library.db" beforeDir="false" afterPath="$PROJECT_DIR$/library.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfoInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.dll" afterDir="false" />
@@ -33,7 +24,6 @@
       <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/refint/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/refint/Library.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rpswa.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rpswa.dswa.cache.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +34,7 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="7" />
+    <option name="cachedIndexableFilesCount" value="41" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -186,7 +176,8 @@
       <workItem from="1793906091760" duration="4031000" />
       <workItem from="1794164591637" duration="1948000" />
       <workItem from="1794339862431" duration="441000" />
-      <workItem from="1794340431772" duration="5019000" />
+      <workItem from="1794340431772" duration="5281000" />
+      <workItem from="1794383448593" duration="393000" />
     </task>
     <task id="LOCAL-00001" summary="configure LibraryContext, fix model properties and update views for Library system">
       <option name="closed" value="true" />
@@ -372,7 +363,15 @@
       <option name="project" value="LOCAL" />
       <updated>1794344976251</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="add func to add a new category and author">
+      <option name="closed" value="true" />
+      <created>1794345736529</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1794345736529</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -415,7 +414,8 @@
     <MESSAGE value="add confirm password func" />
     <MESSAGE value="add profile functions" />
     <MESSAGE value="add username auth and update ui" />
-    <option name="LAST_COMMIT_MESSAGE" value="add username auth and update ui" />
+    <MESSAGE value="add func to add a new category and author" />
+    <option name="LAST_COMMIT_MESSAGE" value="add func to add a new category and author" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

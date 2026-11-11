@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+﻿﻿using System.Security.Claims;
 using Library.Data;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -48,6 +48,76 @@ namespace Library.Controllers
                 .ToListAsync();
 
             return View(books);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> Borrow(int id)
+        {
+            if (User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
+            var bookExists = await _context.Books.AnyAsync(book => book.BookId == id);
+
+            if (!bookExists)
+            {
+                return NotFound();
+            }
+
+            var isBorrowed = await _context.BorrowRecords
+                .AnyAsync(record => record.BookId == id && !record.IsReturned);
+
+            if (isBorrowed)
+            {
+                TempData["Error"] = "Тази книга вече е заета.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Forbid();
+            }
+
+            _context.BorrowRecords.Add(new BorrowRecord
+            {
+                BookId = id,
+                UserId = userId,
+                BorrowDate = DateTime.Now,
+                IsReturned = false
+            });
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Книгата е заета успешно.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = await _context.Books
+                .Include(item => item.Author)
+                .Include(item => item.Category)
+                .FirstOrDefaultAsync(item => item.BookId == id);
+
+            if (book == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.IsBorrowed = await _context.BorrowRecords
+                .AnyAsync(record => record.BookId == id && !record.IsReturned);
+
+            return View(book);
         }
 
         [Authorize(Roles = "Admin")]
