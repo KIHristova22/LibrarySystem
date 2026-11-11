@@ -45,6 +45,15 @@
                            asp-controller="Categories" asp-action="Index">Categories</a>
                     </li>
 
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")"
+                               asp-controller="Reports"
+                               asp-action="Index">Reports &amp; Analytics</a>
+                        </li>
+                    }
+
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li class="nav-item">

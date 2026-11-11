@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library.csproj": {}
+    "C:\\Users\\krist\\Desktop\\LibrarySystem\\Library\\Library.csproj": {}
   },
   "projects": {
-    "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library.csproj": {
+    "C:\\Users\\krist\\Desktop\\LibrarySystem\\Library\\Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library.csproj",
+        "projectUniqueName": "C:\\Users\\krist\\Desktop\\LibrarySystem\\Library\\Library.csproj",
         "projectName": "Library",
-        "projectPath": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\Library.csproj",
+        "projectPath": "C:\\Users\\krist\\Desktop\\LibrarySystem\\Library\\Library.csproj",
         "packagesPath": "C:\\Users\\krist\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\krist\\Documents\\LibrarySystem\\Library\\obj\\",
+        "outputPath": "C:\\Users\\krist\\Desktop\\LibrarySystem\\Library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,10 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[10.0.14, )"
@@ -65,6 +69,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[10.0.2, )"
+            },
+            "QuestPDF": {
+              "target": "Package",
+              "version": "[2024.12.3, )"
             }
           },
           "imports": [
