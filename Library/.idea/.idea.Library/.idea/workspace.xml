@@ -11,6 +11,10 @@
   <component name="ChangeListManager">
     <list default="true" id="bc110595-dd16-49ae-90a6-575d202434b4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/BooksController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/BooksController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/BookService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/BookService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LibrarySystem.Tests/BookServiceTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../LibrarySystem.Tests/BookServiceTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +174,7 @@
       <workItem from="1794385918620" duration="312000" />
       <workItem from="1795544089323" duration="954000" />
       <workItem from="1795545202568" duration="1692000" />
-      <workItem from="1795547654392" duration="2389000" />
+      <workItem from="1795547654392" duration="3801000" />
     </task>
     <task id="LOCAL-00001" summary="configure LibraryContext, fix model properties and update views for Library system">
       <option name="closed" value="true" />
@@ -396,7 +400,15 @@
       <option name="project" value="LOCAL" />
       <updated>1795548778856</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="add restful api and console client">
+      <option name="closed" value="true" />
+      <created>1795550380691</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1795550380691</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -417,7 +429,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="database seeding order and routing 404 issues" />
     <MESSAGE value="update library models" />
     <MESSAGE value="update crud" />
     <MESSAGE value="update text and clean up views" />
@@ -442,7 +453,8 @@
     <MESSAGE value="restrict book borrowing only for users" />
     <MESSAGE value="add error handling, logging, transactions, and login layout" />
     <MESSAGE value="unit tests with xunit and moq" />
-    <option name="LAST_COMMIT_MESSAGE" value="unit tests with xunit and moq" />
+    <MESSAGE value="add restful api and console client" />
+    <option name="LAST_COMMIT_MESSAGE" value="add restful api and console client" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

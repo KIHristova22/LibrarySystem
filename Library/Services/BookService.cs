@@ -1,14 +1,19 @@
 using Library.Models;
+using Library.Strategies;
 
 namespace Library.Services
 {
     public class BookService : IBookService
     {
         private readonly IBorrowRepository _repository;
+        private readonly IBookSortStrategyResolver _sortStrategyResolver;
 
-        public BookService(IBorrowRepository repository)
+        public BookService(
+            IBorrowRepository repository,
+            IBookSortStrategyResolver sortStrategyResolver)
         {
             _repository = repository;
+            _sortStrategyResolver = sortStrategyResolver;
         }
 
         public async Task<BorrowResult> BorrowBookAsync(int bookId, string? userId, bool isAdmin)
@@ -107,27 +112,8 @@ namespace Library.Services
                 query = query.Where(book => !borrowedBookIds.Contains(book.BookId));
             }
 
-            query = sortOrder switch
-            {
-                "name_desc" => query
-                    .OrderByDescending(book => book.Title)
-                    .ThenByDescending(book => book.BookId),
-                "date" => query
-                    .OrderBy(book => book.BookId),
-                "date_desc" => query
-                    .OrderByDescending(book => book.BookId),
-                "price" => query
-                    .OrderBy(book => book.Price)
-                    .ThenBy(book => book.BookId),
-                "price_desc" => query
-                    .OrderByDescending(book => book.Price)
-                    .ThenBy(book => book.BookId),
-                _ => query
-                    .OrderBy(book => book.Title)
-                    .ThenBy(book => book.BookId)
-            };
-
-            return query;
+            var strategy = _sortStrategyResolver.Resolve(sortOrder);
+            return strategy.Apply(query);
         }
     }
 }

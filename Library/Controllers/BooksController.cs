@@ -1,6 +1,6 @@
-﻿﻿﻿using System.Security.Claims;
-using Library.Data;
+using System.Security.Claims;
 using Library.Models;
+using Library.Repositories;
 using Library.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ namespace Library.Controllers
 {
     public class BooksController : Controller
     {
-        private readonly LibraryContext _context;
+        private readonly IBookRepository _bookRepository;
         private readonly ILogger<BooksController> _logger;
         private readonly IBookService _bookService;
 
@@ -24,11 +24,11 @@ namespace Library.Controllers
         private const long MaxImageSizeBytes = 5 * 1024 * 1024;
 
         public BooksController(
-            LibraryContext context,
+            IBookRepository bookRepository,
             ILogger<BooksController> logger,
             IBookService bookService)
         {
-            _context = context;
+            _bookRepository = bookRepository;
             _logger = logger;
             _bookService = bookService;
         }
@@ -45,15 +45,9 @@ namespace Library.Controllers
             page = Math.Max(page, 1);
             searchString = searchString?.Trim();
 
-            var activeBorrowedBookIds = await _context.BorrowRecords
-                .Where(record => !record.IsReturned)
-                .Select(record => record.BookId)
-                .ToListAsync();
+            var activeBorrowedBookIds = await _bookRepository.GetActiveBorrowedBookIdsAsync();
 
-            var baseQuery = _context.Books
-                .Include(book => book.Author)
-                .Include(book => book.Category)
-                .AsQueryable();
+            var baseQuery = _bookRepository.QueryWithDetails();
 
             var query = _bookService.ApplyFiltersAndSort(
                 baseQuery,
@@ -77,9 +71,7 @@ namespace Library.Controllers
 
             ViewBag.BorrowedBookIds = activeBorrowedBookIds;
 
-            ViewBag.Categories = await _context.Categories
-                .OrderBy(category => category.Name)
-                .ToListAsync();
+            ViewBag.Categories = await _bookRepository.GetCategoriesOrderedAsync();
 
             ViewBag.SearchString = searchString;
             ViewBag.CategoryId = categoryId;
@@ -107,7 +99,7 @@ namespace Library.Controllers
             }
 
             await using var transaction =
-                await _context.Database.BeginTransactionAsync();
+                await _bookRepository.BeginTransactionAsync();
 
             try
             {
@@ -167,20 +159,14 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .Include(item => item.Author)
-                .Include(item => item.Category)
-                .FirstOrDefaultAsync(item => item.BookId == id);
+            var book = await _bookRepository.FindByIdWithDetailsAsync(id.Value);
 
             if (book == null)
             {
                 return NotFound();
             }
 
-            ViewBag.IsBorrowed = await _context.BorrowRecords
-                .AnyAsync(record =>
-                    record.BookId == id &&
-                    !record.IsReturned);
+            ViewBag.IsBorrowed = await _bookRepository.IsCurrentlyBorrowedAsync(id.Value);
 
             return View(book);
         }
@@ -188,8 +174,7 @@ namespace Library.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int? categoryId)
         {
-            await PopulateDropdownsAsync(
-                selectedCategoryId: categoryId);
+            await PopulateDropdownsAsync(selectedCategoryId: categoryId);
 
             return View();
         }
@@ -203,9 +188,7 @@ namespace Library.Controllers
 
             if (!ModelState.IsValid)
             {
-                await PopulateDropdownsAsync(
-                    book.AuthorId,
-                    book.CategoryId);
+                await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
 
                 return View(book);
             }
@@ -217,8 +200,8 @@ namespace Library.Controllers
                     book.ImageUrl = await SaveImageAsync(book.ImageFile);
                 }
 
-                _context.Books.Add(book);
-                await _context.SaveChangesAsync();
+                await _bookRepository.AddAsync(book);
+                await _bookRepository.SaveChangesAsync();
 
                 _logger.LogInformation(
                     "Admin created book {BookId}: {BookTitle}",
@@ -246,16 +229,14 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books.FindAsync(id);
+            var book = await _bookRepository.FindByIdAsync(id.Value);
 
             if (book == null)
             {
                 return NotFound();
             }
 
-            await PopulateDropdownsAsync(
-                book.AuthorId,
-                book.CategoryId);
+            await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
 
             return View(book);
         }
@@ -270,7 +251,7 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var existingBook = await _context.Books.FindAsync(id);
+            var existingBook = await _bookRepository.FindByIdAsync(id);
 
             if (existingBook == null)
             {
@@ -283,9 +264,7 @@ namespace Library.Controllers
             {
                 book.ImageUrl = existingBook.ImageUrl;
 
-                await PopulateDropdownsAsync(
-                    book.AuthorId,
-                    book.CategoryId);
+                await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
 
                 return View(book);
             }
@@ -302,11 +281,10 @@ namespace Library.Controllers
 
                 if (hasNewImage)
                 {
-                    existingBook.ImageUrl =
-                        await SaveImageAsync(book.ImageFile!);
+                    existingBook.ImageUrl = await SaveImageAsync(book.ImageFile!);
                 }
 
-                await _context.SaveChangesAsync();
+                await _bookRepository.SaveChangesAsync();
 
                 if (hasNewImage)
                 {
@@ -339,10 +317,7 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Books
-                .Include(item => item.Author)
-                .Include(item => item.Category)
-                .FirstOrDefaultAsync(item => item.BookId == id);
+            var book = await _bookRepository.FindByIdWithDetailsAsync(id.Value);
 
             if (book == null)
             {
@@ -358,7 +333,7 @@ namespace Library.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var book = await _context.Books.FindAsync(id);
+            var book = await _bookRepository.FindByIdAsync(id);
 
             if (book != null)
             {
@@ -366,8 +341,8 @@ namespace Library.Controllers
 
                 try
                 {
-                    _context.Books.Remove(book);
-                    await _context.SaveChangesAsync();
+                    await _bookRepository.RemoveAsync(book);
+                    await _bookRepository.SaveChangesAsync();
 
                     DeleteStoredImage(imageUrl);
 
@@ -396,8 +371,7 @@ namespace Library.Controllers
                 return;
             }
 
-            var extension = Path.GetExtension(
-                Path.GetFileName(imageFile.FileName));
+            var extension = Path.GetExtension(Path.GetFileName(imageFile.FileName));
 
             if (!AllowedImageExtensions.Contains(extension))
             {
@@ -418,8 +392,7 @@ namespace Library.Controllers
         {
             Directory.CreateDirectory(_uploadsFolder);
 
-            var extension = Path.GetExtension(
-                Path.GetFileName(imageFile.FileName))
+            var extension = Path.GetExtension(Path.GetFileName(imageFile.FileName))
                 .ToLowerInvariant();
 
             var fileName = $"{Guid.NewGuid():N}{extension}";
@@ -462,21 +435,13 @@ namespace Library.Controllers
             int? selectedAuthorId = null,
             int? selectedCategoryId = null)
         {
-            var authors = await _context.Authors
-                .Select(author => new
-                {
-                    author.AuthorId,
-                    Name = author.FirstName + " " + author.LastName
-                })
-                .ToListAsync();
-
-            var categories = await _context.Categories
-                .ToListAsync();
+            var authors = await _bookRepository.GetAuthorsForDropdownAsync();
+            var categories = await _bookRepository.GetCategoriesOrderedAsync();
 
             ViewBag.Authors = new SelectList(
                 authors,
-                "AuthorId",
-                "Name",
+                nameof(AuthorOption.AuthorId),
+                nameof(AuthorOption.Name),
                 selectedAuthorId);
 
             ViewBag.Categories = new SelectList(

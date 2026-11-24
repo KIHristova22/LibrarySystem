@@ -45,6 +45,16 @@ builder.Services
 builder.Services.AddScoped<Library.Services.IBorrowRepository, Library.Services.BorrowRepository>();
 builder.Services.AddScoped<Library.Services.IBookService, Library.Services.BookService>();
 
+builder.Services.AddScoped<Library.Repositories.IBookRepository, Library.Repositories.BookRepository>();
+
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategy, Library.Strategies.NameAscSortStrategy>();
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategy, Library.Strategies.NameDescSortStrategy>();
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategy, Library.Strategies.DateAscSortStrategy>();
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategy, Library.Strategies.DateDescSortStrategy>();
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategy, Library.Strategies.PriceAscSortStrategy>();
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategy, Library.Strategies.PriceDescSortStrategy>();
+builder.Services.AddScoped<Library.Strategies.IBookSortStrategyResolver, Library.Strategies.BookSortStrategyResolver>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>

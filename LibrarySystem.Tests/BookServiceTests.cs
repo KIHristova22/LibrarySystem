@@ -1,5 +1,6 @@
 using Library.Models;
 using Library.Services;
+using Library.Strategies;
 using Moq;
 
 namespace LibrarySystem.Tests
@@ -8,7 +9,17 @@ namespace LibrarySystem.Tests
     {
         private static BookService CreateService(Mock<IBorrowRepository> repository)
         {
-            return new BookService(repository.Object);
+            var strategies = new IBookSortStrategy[]
+            {
+                new NameAscSortStrategy(),
+                new NameDescSortStrategy(),
+                new DateAscSortStrategy(),
+                new DateDescSortStrategy(),
+                new PriceAscSortStrategy(),
+                new PriceDescSortStrategy()
+            };
+            var resolver = new BookSortStrategyResolver(strategies);
+            return new BookService(repository.Object, resolver);
         }
 
         [Fact]
