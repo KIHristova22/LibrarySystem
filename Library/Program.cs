@@ -41,6 +41,9 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<LibraryContext>();
 
+builder.Services.AddScoped<Library.Services.IBorrowRepository, Library.Services.BorrowRepository>();
+builder.Services.AddScoped<Library.Services.IBookService, Library.Services.BookService>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 

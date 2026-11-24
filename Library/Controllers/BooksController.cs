@@ -1,6 +1,7 @@
 ﻿﻿﻿using System.Security.Claims;
 using Library.Data;
 using Library.Models;
+using Library.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ namespace Library.Controllers
     {
         private readonly LibraryContext _context;
         private readonly ILogger<BooksController> _logger;
+        private readonly IBookService _bookService;
 
         private readonly string _uploadsFolder =
             @"C:/Users/krist/Documents/LibrarySystem/Library/UploadedImages";
@@ -23,10 +25,12 @@ namespace Library.Controllers
 
         public BooksController(
             LibraryContext context,
-            ILogger<BooksController> logger)
+            ILogger<BooksController> logger,
+            IBookService bookService)
         {
             _context = context;
             _logger = logger;
+            _bookService = bookService;
         }
 
         public async Task<IActionResult> Index(
@@ -41,64 +45,23 @@ namespace Library.Controllers
             page = Math.Max(page, 1);
             searchString = searchString?.Trim();
 
-            var query = _context.Books
+            var activeBorrowedBookIds = await _context.BorrowRecords
+                .Where(record => !record.IsReturned)
+                .Select(record => record.BookId)
+                .ToListAsync();
+
+            var baseQuery = _context.Books
                 .Include(book => book.Author)
                 .Include(book => book.Category)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchString))
-            {
-                query = query.Where(book => book.Title.Contains(searchString));
-            }
-
-            if (categoryId.HasValue)
-            {
-                query = query.Where(book => book.CategoryId == categoryId.Value);
-            }
-
-            if (onlyAvailable == true)
-            {
-                query = query.Where(book =>
-                    !_context.BorrowRecords.Any(record =>
-                        record.BookId == book.BookId && !record.IsReturned));
-            }
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    query = query
-                        .OrderByDescending(book => book.Title)
-                        .ThenByDescending(book => book.BookId);
-                    break;
-
-                case "date":
-                    query = query
-                        .OrderBy(book => book.BookId);
-                    break;
-
-                case "date_desc":
-                    query = query
-                        .OrderByDescending(book => book.BookId);
-                    break;
-
-                case "price":
-                    query = query
-                        .OrderBy(book => book.Price)
-                        .ThenBy(book => book.BookId);
-                    break;
-
-                case "price_desc":
-                    query = query
-                        .OrderByDescending(book => book.Price)
-                        .ThenBy(book => book.BookId);
-                    break;
-
-                default:
-                    query = query
-                        .OrderBy(book => book.Title)
-                        .ThenBy(book => book.BookId);
-                    break;
-            }
+            var query = _bookService.ApplyFiltersAndSort(
+                baseQuery,
+                activeBorrowedBookIds,
+                searchString,
+                categoryId,
+                onlyAvailable,
+                sortOrder);
 
             var totalItems = await query.CountAsync();
 
@@ -112,10 +75,7 @@ namespace Library.Controllers
                 1,
                 (int)Math.Ceiling(totalItems / (double)pageSize));
 
-            ViewBag.BorrowedBookIds = await _context.BorrowRecords
-                .Where(record => !record.IsReturned)
-                .Select(record => record.BookId)
-                .ToListAsync();
+            ViewBag.BorrowedBookIds = activeBorrowedBookIds;
 
             ViewBag.Categories = await _context.Categories
                 .OrderBy(category => category.Name)
@@ -151,21 +111,24 @@ namespace Library.Controllers
 
             try
             {
-                var book = await _context.Books
-                    .FirstOrDefaultAsync(item => item.BookId == id);
+                var result = await _bookService.BorrowBookAsync(
+                    id,
+                    userId,
+                    User.IsInRole("Admin"));
 
-                if (book == null)
+                if (result == BorrowResult.BookNotFound)
                 {
                     await transaction.RollbackAsync();
                     return NotFound();
                 }
 
-                var isBorrowed = await _context.BorrowRecords
-                    .AnyAsync(record =>
-                        record.BookId == id &&
-                        !record.IsReturned);
+                if (result == BorrowResult.Forbidden)
+                {
+                    await transaction.RollbackAsync();
+                    return Forbid();
+                }
 
-                if (isBorrowed)
+                if (result == BorrowResult.AlreadyBorrowed)
                 {
                     await transaction.RollbackAsync();
 
@@ -173,17 +136,6 @@ namespace Library.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                var borrowRecord = new BorrowRecord
-                {
-                    BookId = id,
-                    UserId = userId,
-                    BorrowDate = DateTime.Now,
-                    IsReturned = false
-                };
-
-                _context.BorrowRecords.Add(borrowRecord);
-
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
                 _logger.LogInformation(
