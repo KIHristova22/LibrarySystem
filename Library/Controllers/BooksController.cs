@@ -1,4 +1,4 @@
-﻿﻿using System.Security.Claims;
+﻿﻿﻿using System.Security.Claims;
 using Library.Data;
 using Library.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +11,8 @@ namespace Library.Controllers
     public class BooksController : Controller
     {
         private readonly LibraryContext _context;
+        private readonly ILogger<BooksController> _logger;
+
         private readonly string _uploadsFolder =
             @"C:/Users/krist/Documents/LibrarySystem/Library/UploadedImages";
 
@@ -19,9 +21,12 @@ namespace Library.Controllers
 
         private const long MaxImageSizeBytes = 5 * 1024 * 1024;
 
-        public BooksController(LibraryContext context)
+        public BooksController(
+            LibraryContext context,
+            ILogger<BooksController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(
@@ -63,19 +68,15 @@ namespace Library.Controllers
                 case "name_desc":
                     query = query
                         .OrderByDescending(book => book.Title)
-                        .ThenBy(book => book.BookId);
+                        .ThenByDescending(book => book.BookId);
                     break;
 
                 case "date":
-                    // No Book publication date exists in the current model.
-                    // Fallback to BookId so the app still works.
                     query = query
                         .OrderBy(book => book.BookId);
                     break;
 
                 case "date_desc":
-                    // No Book publication date exists in the current model.
-                    // Fallback to BookId so the app still works.
                     query = query
                         .OrderByDescending(book => book.BookId);
                     break;
@@ -138,22 +139,6 @@ namespace Library.Controllers
                 return Forbid();
             }
 
-            var bookExists = await _context.Books.AnyAsync(book => book.BookId == id);
-
-            if (!bookExists)
-            {
-                return NotFound();
-            }
-
-            var isBorrowed = await _context.BorrowRecords
-                .AnyAsync(record => record.BookId == id && !record.IsReturned);
-
-            if (isBorrowed)
-            {
-                TempData["Error"] = "Тази книга вече е заета.";
-                return RedirectToAction(nameof(Index));
-            }
-
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userId))
@@ -161,18 +146,66 @@ namespace Library.Controllers
                 return Forbid();
             }
 
-            _context.BorrowRecords.Add(new BorrowRecord
+            await using var transaction =
+                await _context.Database.BeginTransactionAsync();
+
+            try
             {
-                BookId = id,
-                UserId = userId,
-                BorrowDate = DateTime.Now,
-                IsReturned = false
-            });
+                var book = await _context.Books
+                    .FirstOrDefaultAsync(item => item.BookId == id);
 
-            await _context.SaveChangesAsync();
+                if (book == null)
+                {
+                    await transaction.RollbackAsync();
+                    return NotFound();
+                }
 
-            TempData["Success"] = "Книгата е заета успешно.";
-            return RedirectToAction(nameof(Index));
+                var isBorrowed = await _context.BorrowRecords
+                    .AnyAsync(record =>
+                        record.BookId == id &&
+                        !record.IsReturned);
+
+                if (isBorrowed)
+                {
+                    await transaction.RollbackAsync();
+
+                    TempData["Error"] = "Тази книга вече е заета.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                var borrowRecord = new BorrowRecord
+                {
+                    BookId = id,
+                    UserId = userId,
+                    BorrowDate = DateTime.Now,
+                    IsReturned = false
+                };
+
+                _context.BorrowRecords.Add(borrowRecord);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                _logger.LogInformation(
+                    "Book {BookId} was borrowed by user {UserId}.",
+                    id,
+                    userId);
+
+                TempData["Success"] = "Книгата е заета успешно.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception exception)
+            {
+                await transaction.RollbackAsync();
+
+                _logger.LogError(
+                    exception,
+                    "Failed to borrow book {BookId} for user {UserId}.",
+                    id,
+                    userId);
+
+                throw;
+            }
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -193,7 +226,9 @@ namespace Library.Controllers
             }
 
             ViewBag.IsBorrowed = await _context.BorrowRecords
-                .AnyAsync(record => record.BookId == id && !record.IsReturned);
+                .AnyAsync(record =>
+                    record.BookId == id &&
+                    !record.IsReturned);
 
             return View(book);
         }
@@ -201,7 +236,9 @@ namespace Library.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(int? categoryId)
         {
-            await PopulateDropdownsAsync(selectedCategoryId: categoryId);
+            await PopulateDropdownsAsync(
+                selectedCategoryId: categoryId);
+
             return View();
         }
 
@@ -214,19 +251,39 @@ namespace Library.Controllers
 
             if (!ModelState.IsValid)
             {
-                await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+                await PopulateDropdownsAsync(
+                    book.AuthorId,
+                    book.CategoryId);
+
                 return View(book);
             }
 
-            if (book.ImageFile is { Length: > 0 })
+            try
             {
-                book.ImageUrl = await SaveImageAsync(book.ImageFile);
+                if (book.ImageFile is { Length: > 0 })
+                {
+                    book.ImageUrl = await SaveImageAsync(book.ImageFile);
+                }
+
+                _context.Books.Add(book);
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation(
+                    "Admin created book {BookId}: {BookTitle}",
+                    book.BookId,
+                    book.Title);
+
+                return RedirectToAction(nameof(Index));
             }
+            catch (Exception exception)
+            {
+                _logger.LogError(
+                    exception,
+                    "Failed to create book {BookTitle}.",
+                    book.Title);
 
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+                throw;
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -244,7 +301,10 @@ namespace Library.Controllers
                 return NotFound();
             }
 
-            await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+            await PopulateDropdownsAsync(
+                book.AuthorId,
+                book.CategoryId);
+
             return View(book);
         }
 
@@ -270,31 +330,53 @@ namespace Library.Controllers
             if (!ModelState.IsValid)
             {
                 book.ImageUrl = existingBook.ImageUrl;
-                await PopulateDropdownsAsync(book.AuthorId, book.CategoryId);
+
+                await PopulateDropdownsAsync(
+                    book.AuthorId,
+                    book.CategoryId);
+
                 return View(book);
             }
 
-            existingBook.Title = book.Title;
-            existingBook.Price = book.Price;
-            existingBook.AuthorId = book.AuthorId;
-            existingBook.CategoryId = book.CategoryId;
-
-            var oldImageUrl = existingBook.ImageUrl;
-            var hasNewImage = book.ImageFile is { Length: > 0 };
-
-            if (hasNewImage)
+            try
             {
-                existingBook.ImageUrl = await SaveImageAsync(book.ImageFile!);
+                existingBook.Title = book.Title;
+                existingBook.Price = book.Price;
+                existingBook.AuthorId = book.AuthorId;
+                existingBook.CategoryId = book.CategoryId;
+
+                var oldImageUrl = existingBook.ImageUrl;
+                var hasNewImage = book.ImageFile is { Length: > 0 };
+
+                if (hasNewImage)
+                {
+                    existingBook.ImageUrl =
+                        await SaveImageAsync(book.ImageFile!);
+                }
+
+                await _context.SaveChangesAsync();
+
+                if (hasNewImage)
+                {
+                    DeleteStoredImage(oldImageUrl);
+                }
+
+                _logger.LogInformation(
+                    "Admin updated book {BookId}: {BookTitle}",
+                    existingBook.BookId,
+                    existingBook.Title);
+
+                return RedirectToAction(nameof(Index));
             }
-
-            await _context.SaveChangesAsync();
-
-            if (hasNewImage)
+            catch (Exception exception)
             {
-                DeleteStoredImage(oldImageUrl);
-            }
+                _logger.LogError(
+                    exception,
+                    "Failed to update book {BookId}.",
+                    id);
 
-            return RedirectToAction(nameof(Index));
+                throw;
+            }
         }
 
         [Authorize(Roles = "Admin")]
@@ -330,10 +412,26 @@ namespace Library.Controllers
             {
                 var imageUrl = book.ImageUrl;
 
-                _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Books.Remove(book);
+                    await _context.SaveChangesAsync();
 
-                DeleteStoredImage(imageUrl);
+                    DeleteStoredImage(imageUrl);
+
+                    _logger.LogInformation(
+                        "Admin deleted book {BookId}.",
+                        id);
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogError(
+                        exception,
+                        "Failed to delete book {BookId}.",
+                        id);
+
+                    throw;
+                }
             }
 
             return RedirectToAction(nameof(Index));
@@ -346,7 +444,8 @@ namespace Library.Controllers
                 return;
             }
 
-            var extension = Path.GetExtension(Path.GetFileName(imageFile.FileName));
+            var extension = Path.GetExtension(
+                Path.GetFileName(imageFile.FileName));
 
             if (!AllowedImageExtensions.Contains(extension))
             {
@@ -367,8 +466,10 @@ namespace Library.Controllers
         {
             Directory.CreateDirectory(_uploadsFolder);
 
-            var extension = Path.GetExtension(Path.GetFileName(imageFile.FileName))
+            var extension = Path.GetExtension(
+                Path.GetFileName(imageFile.FileName))
                 .ToLowerInvariant();
+
             var fileName = $"{Guid.NewGuid():N}{extension}";
             var filePath = Path.Combine(_uploadsFolder, fileName);
 
@@ -417,7 +518,8 @@ namespace Library.Controllers
                 })
                 .ToListAsync();
 
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories
+                .ToListAsync();
 
             ViewBag.Authors = new SelectList(
                 authors,

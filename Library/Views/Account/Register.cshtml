@@ -1,57 +1,88 @@
 ﻿@model Library.Models.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Create account";
+    Layout = "_Layout";
+    ViewData["Title"] = "Register";
 }
 
-<div class="auth-page">
-    <section class="auth-card">
-        <div class="auth-card-heading">
-            <span class="auth-icon" aria-hidden="true">＋</span>
-            <p class="eyebrow">JOIN THE LIBRARY</p>
-            <h1>Create your account</h1>
-            <p>Set up your reader profile to start borrowing books.</p>
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h2 class="h5 mb-0">Register</h2>
+            </div>
+
+            <div class="card-body">
+                <form asp-controller="Account"
+                      asp-action="Register"
+                      method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="text-danger"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="UserName"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="UserName"
+                               class="form-control" />
+
+                        <span asp-validation-for="UserName"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Email"
+                               class="form-control" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Password"
+                               class="form-control" />
+
+                        <span asp-validation-for="Password"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="ConfirmPassword"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="ConfirmPassword"
+                               class="form-control" />
+
+                        <span asp-validation-for="ConfirmPassword"
+                              class="text-danger"></span>
+                    </div>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Register
+                    </button>
+
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       class="btn btn-link">
+                        Back to login
+                    </a>
+                </form>
+            </div>
         </div>
-
-        <form asp-controller="Account" asp-action="Register" method="post">
-            <div asp-validation-summary="All" class="validation-summary" role="alert"></div>
-
-            <div class="mb-3">
-                <label asp-for="UserName" class="form-label"></label>
-                <input asp-for="UserName" class="form-control" autocomplete="username"
-                       placeholder="Choose a username" />
-                <span asp-validation-for="UserName" class="field-validation"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" type="email" class="form-control" autocomplete="email"
-                       placeholder="you@example.com" />
-                <span asp-validation-for="Email" class="field-validation"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" autocomplete="new-password"
-                       placeholder="At least 6 characters" />
-                <span asp-validation-for="Password" class="field-validation"></span>
-            </div>
-
-            <div class="mb-4">
-                <label asp-for="ConfirmPassword" class="form-label"></label>
-                <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password"
-                       placeholder="Enter your password again" />
-                <span asp-validation-for="ConfirmPassword" class="field-validation"></span>
-            </div>
-
-            <button type="submit" class="btn btn-accent w-100">Create account</button>
-        </form>
-
-        <p class="auth-switch">
-            Already have an account?
-            <a asp-action="Login">Sign in</a>
-        </p>
-    </section>
+    </div>
 </div>
 
 @section Scripts {

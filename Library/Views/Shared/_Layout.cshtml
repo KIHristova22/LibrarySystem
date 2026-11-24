@@ -2,101 +2,126 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#172554" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - LibrarySystem</title>
+    <title>@ViewData["Title"] - Library</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
 </head>
+
 <body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-lg container">
-            <a class="navbar-brand brand-lockup" asp-controller="Books" asp-action="Index">
-                <span class="brand-mark" aria-hidden="true">L</span>
-                <span>
-                    <strong>LibrarySystem</strong>
-                    <small>Your neighborhood library</small>
-                </span>
-            </a>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand"
+                   asp-controller="Books"
+                   asp-action="Index">
+                    Library
+                </a>
 
-            <button class="navbar-toggler" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#mainNavigation"
-                    aria-controls="mainNavigation"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="mainNavigation">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Books" ? "active" : "")"
-                           asp-controller="Books" asp-action="Index">Books</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Authors" ? "active" : "")"
-                           asp-controller="Authors" asp-action="Index">Authors</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Categories" ? "active" : "")"
-                           asp-controller="Categories" asp-action="Index">Categories</a>
-                    </li>
-
-                    @if (User.IsInRole("Admin"))
-                    {
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")"
-                               asp-controller="Reports"
-                               asp-action="Index">Reports &amp; Analytics</a>
+                            <a class="nav-link text-dark"
+                               asp-controller="Books"
+                               asp-action="Index">
+                                Books
+                            </a>
                         </li>
-                    }
 
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Profile" ? "active" : "")"
-                               asp-controller="Account" asp-action="Profile">My Profile</a>
-                        </li>
-                        <li class="nav-item ms-lg-2">
-                            <span class="nav-user">Hello, @User.Identity.Name</span>
-                        </li>
-                        <li class="nav-item ms-lg-2">
-                            <form asp-controller="Account" asp-action="Logout" method="post">
-                                <button type="submit" class="btn btn-outline-light btn-sm">Sign out</button>
-                            </form>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item ms-lg-2">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">Sign in</a>
-                        </li>
-                        <li class="nav-item ms-lg-2">
-                            <a class="btn btn-accent btn-sm" asp-controller="Account" asp-action="Register">Create account</a>
-                        </li>
-                    }
-                </ul>
+                        @if (User.IsInRole("User"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Books"
+                                   asp-action="MyBooks">
+                                    My Books
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Authors"
+                                   asp-action="Index">
+                                    Authors
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Categories"
+                                   asp-action="Index">
+                                    Categories
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Reports"
+                                   asp-action="Index">
+                                    Reports
+                                </a>
+                            </li>
+                        }
+                    </ul>
+
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </nav>
     </header>
 
-    <main class="container page-content" role="main">
+    <main role="main"
+          class="container pb-3">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["Success"]
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["Error"]
+            </div>
+        }
+
         @RenderBody()
     </main>
 
-    <footer class="site-footer">
-        <div class="container d-flex flex-column flex-sm-row justify-content-between gap-2">
-            <span>LibrarySystem</span>
-            <span>Discover your next great read.</span>
+    <footer class="border-top footer text-muted">
+        <div class="container py-3">
+            &copy; @DateTime.Now.Year - Library
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+    @await RenderSectionAsync(
+        "Scripts",
+        required: false)
 </body>
 </html>
