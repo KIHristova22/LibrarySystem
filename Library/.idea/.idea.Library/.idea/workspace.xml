@@ -10,20 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc110595-dd16-49ae-90a6-575d202434b4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Logs/app-log-20261124_003.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Logs/app-log-20261124_003.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/net10.0/Library.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/net10.0/Library.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/Library.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/Library.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/ref/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/ref/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/refint/Library.dll" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/refint/Library.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net10.0/rjsmrazor.dswa.cache.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Library/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -183,7 +170,7 @@
       <workItem from="1794385918620" duration="312000" />
       <workItem from="1795544089323" duration="954000" />
       <workItem from="1795545202568" duration="1692000" />
-      <workItem from="1795547654392" duration="902000" />
+      <workItem from="1795547654392" duration="2389000" />
     </task>
     <task id="LOCAL-00001" summary="configure LibraryContext, fix model properties and update views for Library system">
       <option name="closed" value="true" />
@@ -401,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1795545266834</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="unit tests with xunit and moq">
+      <option name="closed" value="true" />
+      <created>1795548778856</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1795548778856</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -422,7 +417,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="configure LibraryContext, fix model properties and update views for Library system" />
     <MESSAGE value="database seeding order and routing 404 issues" />
     <MESSAGE value="update library models" />
     <MESSAGE value="update crud" />
@@ -447,7 +441,8 @@
     <MESSAGE value="add func to add a new category and author" />
     <MESSAGE value="restrict book borrowing only for users" />
     <MESSAGE value="add error handling, logging, transactions, and login layout" />
-    <option name="LAST_COMMIT_MESSAGE" value="add error handling, logging, transactions, and login layout" />
+    <MESSAGE value="unit tests with xunit and moq" />
+    <option name="LAST_COMMIT_MESSAGE" value="unit tests with xunit and moq" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
