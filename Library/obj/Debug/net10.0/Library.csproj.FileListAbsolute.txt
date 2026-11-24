@@ -1237,7 +1237,6 @@ C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\co
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\nezrqnk58p-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\v0zgfp0y55-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\yfc7ypekbg-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\pp8kl35ur8-{0}-k8oubgvtln-k8oubgvtln.gz
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\md0ybo3cn4-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\80l2mev20u-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\qrehndlzvd-{0}-t1cqhe9u97-t1cqhe9u97.gz
@@ -1312,3 +1311,4 @@ C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\re
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\Library.pdb
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\Library.genruntimeconfig.cache
 C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\ref\Library.dll
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\Library\obj\Debug\net10.0\compressed\pp8kl35ur8-{0}-c2wyr4htw0-c2wyr4htw0.gz

@@ -1,28 +1,23 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Library</title>
-
-    <link rel="stylesheet"
-          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-
-    <link rel="stylesheet"
-          href="~/css/site.css"
-          asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand"
-                   asp-controller="Books"
-                   asp-action="Index">
-                    Library
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="brand-lockup" asp-controller="Books" asp-action="Index">
+                    <span class="brand-mark">L</span>
+                    <span>
+                        <strong>Library</strong>
+                        <small>Book Management</small>
+                    </span>
                 </a>
 
                 <button class="navbar-toggler"
@@ -35,51 +30,29 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Books"
-                               asp-action="Index">
-                                Books
-                            </a>
+                            <a class="nav-link" asp-controller="Books" asp-action="Index">Books</a>
                         </li>
 
                         @if (User.IsInRole("User"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
-                                   asp-controller="Books"
-                                   asp-action="MyBooks">
-                                    My Books
-                                </a>
+                                <a class="nav-link" asp-controller="Books" asp-action="MyBooks">My Books</a>
                             </li>
                         }
 
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
-                                   asp-controller="Authors"
-                                   asp-action="Index">
-                                    Authors
-                                </a>
+                                <a class="nav-link" asp-controller="Authors" asp-action="Index">Authors</a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
-                                   asp-controller="Categories"
-                                   asp-action="Index">
-                                    Categories
-                                </a>
+                                <a class="nav-link" asp-controller="Categories" asp-action="Index">Categories</a>
                             </li>
-
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
-                                   asp-controller="Reports"
-                                   asp-action="Index">
-                                    Reports
-                                </a>
+                                <a class="nav-link" asp-controller="Reports" asp-action="Index">Reports</a>
                             </li>
                         }
                     </ul>
@@ -90,38 +63,40 @@
         </nav>
     </header>
 
-    <main role="main"
-          class="container pb-3">
+    <main class="page-content">
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success">
-                @TempData["Success"]
+            <div class="container">
+                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                    @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             </div>
         }
 
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger">
-                @TempData["Error"]
+            <div class="container">
+                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             </div>
         }
 
         @RenderBody()
     </main>
 
-    <footer class="border-top footer text-muted">
-        <div class="container py-3">
-            &copy; @DateTime.Now.Year - Library
+    <footer class="site-footer">
+        <div class="container text-center">
+            &copy; @DateTime.Now.Year Library
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js"
-            asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync(
-        "Scripts",
-        required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

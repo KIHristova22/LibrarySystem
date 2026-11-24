@@ -1,34 +1,42 @@
-﻿@model Library.Models.Book
+@model Library.Models.Book
 
 @{
     ViewData["Title"] = "Delete Book";
 }
 
-<div class="container py-4">
+<div class="container pb-4">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card border-danger shadow-sm">
-                <div class="card-body p-4">
-                    <h3 class="fw-bold text-danger mb-3">Delete Book</h3>
-                    <p class="text-muted">Are you sure you want to delete this book from the catalog?</p>
+        <div class="col-md-7 col-lg-6">
+            <div class="book-list-card">
+                <div class="p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="auth-icon flex-shrink-0" style="background:#fff4f4; color: var(--danger);">!</div>
+                        <div>
+                            <h2 class="h4 fw-bold text-danger mb-0">Delete Book</h2>
+                            <p class="text-muted small mb-0">This action cannot be undone.</p>
+                        </div>
+                    </div>
 
-                    <dl class="row mb-4">
-                        <dt class="col-sm-4 fw-semibold">Title</dt>
-                        <dd class="col-sm-8">@Model.Title</dd>
+                    <div class="p-3 mb-4" style="background:#fafbfc; border-radius:11px; border:1px solid var(--line);">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4 text-muted small fw-semibold">Title</dt>
+                            <dd class="col-sm-8 fw-semibold">@Model.Title</dd>
 
-                        <dt class="col-sm-4 fw-semibold">Author</dt>
-                        <dd class="col-sm-8">@(Model.Author != null ? $"{Model.Author.FirstName} {Model.Author.LastName}" : "Unknown")</dd>
+                            <dt class="col-sm-4 text-muted small fw-semibold">Author</dt>
+                            <dd class="col-sm-8">@(Model.Author != null ? $"{Model.Author.FirstName} {Model.Author.LastName}" : "Unknown")</dd>
 
-                        <dt class="col-sm-4 fw-semibold">Category</dt>
-                        <dd class="col-sm-8">@(Model.Category != null ? Model.Category.Name : "None")</dd>
+                            <dt class="col-sm-4 text-muted small fw-semibold">Category</dt>
+                            <dd class="col-sm-8">@(Model.Category != null ? Model.Category.Name : "None")</dd>
 
-                        <dt class="col-sm-4 fw-semibold">Price</dt>
-                        <dd class="col-sm-8">$@Model.Price.ToString("0.00")</dd>
-                    </dl>
+                            <dt class="col-sm-4 text-muted small fw-semibold mb-0">Price</dt>
+                            <dd class="col-sm-8 mb-0 book-price">$@Model.Price.ToString("0.00")</dd>
+                        </dl>
+                    </div>
 
-                    <form asp-action="Delete">
+                    <form asp-action="Delete" method="post">
                         <input type="hidden" asp-for="BookId" />
-                        <div class="d-flex justify-content-between align-items-center">
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-between gap-2">
                             <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
                             <button type="submit" class="btn btn-danger px-4">Confirm Delete</button>
                         </div>
