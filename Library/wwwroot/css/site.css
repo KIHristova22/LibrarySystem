@@ -287,6 +287,11 @@ a:hover {
   color: #626d7e;
 }
 
+.status-available {
+  background: #edf7f2;
+  color: var(--success);
+}
+
 .table-action {
   margin-left: 0.65rem;
   font-size: 0.88rem;
@@ -389,15 +394,29 @@ a:hover {
   font-weight: 650;
 }
 
-.form-control {
+.form-control,
+.form-select {
   min-height: 46px;
   border-color: #d9deea;
   border-radius: 9px;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: #7790c9;
   box-shadow: 0 0 0 3px rgb(49 88 165 / 12%);
+}
+
+.btn-primary {
+  background-color: var(--navy);
+  border-color: var(--navy);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: var(--navy-deep);
+  border-color: var(--navy-deep);
 }
 
 .auth-card .btn-accent {

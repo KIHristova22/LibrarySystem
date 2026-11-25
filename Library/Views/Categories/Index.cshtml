@@ -9,7 +9,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <div>
-            <p class="text-uppercase text-secondary small fw-bold mb-1">Library catalogue</p>
+            <p class="eyebrow">Library Catalogue</p>
             <h1 class="h2 fw-bold mb-1">Categories</h1>
             <p class="text-secondary mb-0">Browse the categories used to organize books.</p>
         </div>
@@ -18,8 +18,8 @@
         {
             <a asp-controller="Categories"
                asp-action="Create"
-               class="btn btn-primary">
-                + Добави нова категория
+               class="btn btn-accent">
+                + Add Category
             </a>
         }
     </div>
@@ -35,10 +35,10 @@
         </div>
     }
 
-    <div class="card border-0 shadow-sm">
+    <div class="book-list-card">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+            <table class="table book-table mb-0">
+                <thead>
                     <tr>
                         <th class="py-3 ps-4">Category name</th>
                         @if (isAdmin)

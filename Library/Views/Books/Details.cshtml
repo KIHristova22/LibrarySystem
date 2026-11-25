@@ -1,65 +1,97 @@
 @model Library.Models.Book
 
 @{
-    ViewData["Title"] = "Book Details";
+    ViewData["Title"] = Model.Title;
     var isAdmin = User.IsInRole("Admin");
-    var isUser = User.Identity?.IsAuthenticated == true
-                 && User.IsInRole("User")
-                 && !isAdmin;
+    var isUser = User.Identity?.IsAuthenticated == true && User.IsInRole("User") && !isAdmin;
     var isBorrowed = ViewBag.IsBorrowed is bool borrowed && borrowed;
 }
 
-<div class="container py-4">
-    <h2>Book Details</h2>
+<div class="container pb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <p class="eyebrow">Book Details</p>
+            <h1 class="h2 fw-bold mb-0">@Model.Title</h1>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">← Back to books</a>
+    </div>
 
-    <dl class="row mt-3">
-        <dt class="col-sm-3">Title</dt>
-        <dd class="col-sm-9">@Model.Title</dd>
+    <div class="book-list-card">
+        <div class="row g-0">
+            <div class="col-auto p-4 d-flex align-items-start justify-content-center" style="min-width: 160px;">
+                @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                {
+                    <img src="@Model.ImageUrl"
+                         alt="Cover of @Model.Title"
+                         class="rounded"
+                         style="width: 140px; height: 190px; object-fit: cover; box-shadow: 0 4px 14px rgb(23 32 51 / 16%);" />
+                }
+                else
+                {
+                    <div class="book-cover-placeholder" style="width: 140px; height: 190px; font-size: 0.8rem;">
+                        No cover
+                    </div>
+                }
+            </div>
 
-        <dt class="col-sm-3">Author</dt>
-        <dd class="col-sm-9">
-            @(Model.Author != null
-                ? $"{Model.Author.FirstName} {Model.Author.LastName}"
-                : "Unknown")
-        </dd>
+            <div class="col p-4 d-flex flex-column" style="min-width: 0;">
+                <dl class="row mb-auto">
+                    <dt class="col-sm-3 text-muted small fw-semibold text-uppercase" style="letter-spacing:.05em;">Author</dt>
+                    <dd class="col-sm-9 fw-semibold">
+                        @(Model.Author != null ? $"{Model.Author.FirstName} {Model.Author.LastName}" : "Unknown")
+                    </dd>
 
-        <dt class="col-sm-3">Category</dt>
-        <dd class="col-sm-9">@(Model.Category?.Name ?? "None")</dd>
+                    <dt class="col-sm-3 text-muted small fw-semibold text-uppercase" style="letter-spacing:.05em;">Category</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Category != null)
+                        {
+                            <span class="category-pill">@Model.Category.Name</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </dd>
 
-        <dt class="col-sm-3">Price</dt>
-        <dd class="col-sm-9">$@Model.Price.ToString("0.00")</dd>
+                    <dt class="col-sm-3 text-muted small fw-semibold text-uppercase" style="letter-spacing:.05em;">Price</dt>
+                    <dd class="col-sm-9 book-price">$@Model.Price.ToString("0.00")</dd>
 
-        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
-        {
-            <dt class="col-sm-3">Cover</dt>
-            <dd class="col-sm-9">
-                <img src="@Model.ImageUrl"
-                     alt="Cover of @Model.Title"
-                     style="max-width:180px; max-height:240px; object-fit:cover;" />
-            </dd>
-        }
-    </dl>
+                    <dt class="col-sm-3 text-muted small fw-semibold text-uppercase" style="letter-spacing:.05em;">Status</dt>
+                    <dd class="col-sm-9">
+                        @if (isBorrowed)
+                        {
+                            <span class="status-pill status-borrowed">Currently borrowed</span>
+                        }
+                        else
+                        {
+                            <span class="status-pill status-available">Available</span>
+                        }
+                    </dd>
+                </dl>
 
-    @if (isAdmin)
-    {
-        <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-primary">Edit</a>
-        <a asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-danger">Delete</a>
-    }
-    else if (isUser)
-    {
-        if (isBorrowed)
-        {
-            <span class="badge bg-secondary">This book is already borrowed</span>
-        }
-        else
-        {
-            <form asp-action="Borrow" method="post" class="d-inline">
-                <input type="hidden" name="id" value="@Model.BookId" />
-                @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-success">Borrow</button>
-            </form>
-        }
-    }
-
-    <a asp-action="Index" class="btn btn-outline-secondary">Back to books</a>
+                <div class="d-flex flex-wrap gap-2 pt-3 mt-3 border-top">
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.BookId" class="btn btn-primary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@Model.BookId" class="btn btn-outline-danger">Delete</a>
+                    }
+                    else if (isUser)
+                    {
+                        @if (isBorrowed)
+                        {
+                            <span class="status-pill status-borrowed align-self-center">Already borrowed</span>
+                        }
+                        else
+                        {
+                            <form asp-action="Borrow" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.BookId" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success">Borrow this book</button>
+                            </form>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

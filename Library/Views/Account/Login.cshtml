@@ -1,69 +1,51 @@
-﻿@{
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Sign in";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h2 class="h5 mb-0">Sign in</h2>
-            </div>
-
-            <div class="card-body">
-                <form asp-controller="Account"
-                      asp-action="Login"
-                      method="post">
-                    @Html.AntiForgeryToken()
-
-                    <input type="hidden"
-                           name="returnUrl"
-                           value="@ViewData["ReturnUrl"]" />
-
-                    <div asp-validation-summary="ModelOnly"
-                         class="text-danger"></div>
-
-                    <div class="mb-3">
-                        <label for="email"
-                               class="form-label">
-                            Email
-                        </label>
-
-                        <input id="email"
-                               name="email"
-                               type="email"
-                               class="form-control"
-                               autocomplete="email"
-                               required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password"
-                               class="form-label">
-                            Password
-                        </label>
-
-                        <input id="password"
-                               name="password"
-                               type="password"
-                               class="form-control"
-                               autocomplete="current-password"
-                               required />
-                    </div>
-
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Sign in
-                    </button>
-
-                    <a asp-controller="Account"
-                       asp-action="Register"
-                       class="btn btn-link">
-                        Register
-                    </a>
-                </form>
-            </div>
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-card-heading">
+            <div class="auth-icon">L</div>
+            <h1>Welcome back</h1>
+            <p>Sign in to your Library account</p>
         </div>
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input id="email"
+                       name="email"
+                       type="email"
+                       class="form-control"
+                       autocomplete="email"
+                       placeholder="you@example.com"
+                       required />
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input id="password"
+                       name="password"
+                       type="password"
+                       class="form-control"
+                       autocomplete="current-password"
+                       placeholder="••••••••"
+                       required />
+            </div>
+
+            <button type="submit" class="btn btn-accent w-100">Sign in</button>
+        </form>
+
+        <p class="auth-switch">
+            Don't have an account?
+            <a asp-controller="Account" asp-action="Register">Create one</a>
+        </p>
     </div>
 </div>
 

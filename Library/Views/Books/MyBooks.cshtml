@@ -4,48 +4,59 @@
     ViewData["Title"] = "My Books";
 }
 
-<div class="container py-4">
-    <h2>My Books</h2>
+<div class="container pb-4">
+    <div class="catalogue-heading mb-4">
+        <div>
+            <p class="eyebrow">Your Account</p>
+            <h1>My Books</h1>
+        </div>
+        <a asp-controller="Books" asp-action="Index" class="btn btn-outline-secondary">Browse catalogue</a>
+    </div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
-
-    <table class="table table-bordered table-hover mt-3">
-        <thead class="table-primary">
-        <tr>
-            <th>Book</th>
-            <th>Author</th>
-            <th>Borrowed On</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @if (!Model.Any())
-        {
-            <tr>
-                <td colspan="4" class="text-center text-muted">You currently have no borrowed books.</td>
-            </tr>
-        }
-        else
-        {
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Book.Title</td>
-                    <td>@(item.Book.Author != null ? $"{item.Book.Author.FirstName} {item.Book.Author.LastName}" : "Unknown")</td>
-                    <td>@item.BorrowDate.ToString("dd.MM.yyyy")</td>
-                    <td>
-                        <form asp-action="Return" method="post">
-                            <input type="hidden" name="id" value="@item.BorrowRecordId" />
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-sm btn-warning">Return</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        }
-        </tbody>
-    </table>
+    <div class="book-list-card">
+        <div class="table-responsive">
+            <table class="table book-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Author</th>
+                        <th>Borrowed On</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📖</div>
+                                    <h2>No books borrowed</h2>
+                                    <p>You haven't borrowed any books yet. Browse the catalogue to get started.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="book-title">@item.Book.Title</td>
+                                <td>@(item.Book.Author != null ? $"{item.Book.Author.FirstName} {item.Book.Author.LastName}" : "Unknown")</td>
+                                <td>@item.BorrowDate.ToString("dd MMM yyyy")</td>
+                                <td class="text-center">
+                                    <form asp-action="Return" method="post">
+                                        <input type="hidden" name="id" value="@item.BorrowRecordId" />
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-warning">Return</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

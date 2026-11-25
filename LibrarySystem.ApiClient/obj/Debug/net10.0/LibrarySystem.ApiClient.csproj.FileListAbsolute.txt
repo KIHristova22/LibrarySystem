@@ -1,0 +1,15 @@
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\bin\Debug\net10.0\LibrarySystem.ApiClient.exe
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\bin\Debug\net10.0\LibrarySystem.ApiClient.deps.json
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\bin\Debug\net10.0\LibrarySystem.ApiClient.runtimeconfig.json
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\bin\Debug\net10.0\LibrarySystem.ApiClient.dll
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\bin\Debug\net10.0\LibrarySystem.ApiClient.pdb
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.AssemblyInfoInputs.cache
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.AssemblyInfo.cs
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.csproj.CoreCompileInputs.cache
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.sourcelink.json
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.dll
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\refint\LibrarySystem.ApiClient.dll
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.pdb
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\LibrarySystem.ApiClient.genruntimeconfig.cache
+C:\Users\krist\Desktop\New folder (3)\LibrarySystem\LibrarySystem.ApiClient\obj\Debug\net10.0\ref\LibrarySystem.ApiClient.dll
